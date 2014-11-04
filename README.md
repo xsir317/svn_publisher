@@ -21,7 +21,9 @@ svn_publisher
 
 这次打算把用户和发布项目的关联整理干净，提供完善的rsync配置说明，提供更完善的日志，以及一个看得过去的外观。
 
-技术细节方面，打算更加熟悉一下git，以后这个项目可以考虑用git代替svn；用YAF框架代替yiiframework，使用php扩展代替php调用系统命令，让整个系统看起来不那么山寨，并且更健壮一些。
+技术细节方面，打算更加熟悉一下git，以后这个项目可以考虑用git代替svn；用<del>YAF</del>Laravel框架代替yiiframework，使用php扩展代替php调用系统命令，让整个系统看起来不那么山寨，并且更健壮一些。  
+好吧YAF看得我太纠结了，试试[Laravel](http://www.golaravel.com/)吧。。。
+
 
 ###优点
 通过指定svn历史版本进行发布，好处是可以依赖svn的版本管理，又比svn钩子之类的更直观，对发布有更强的控制。  
