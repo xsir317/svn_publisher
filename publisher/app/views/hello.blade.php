@@ -1,9 +1,9 @@
 @extends('layouts.master')
-
+@section('title')
+欢迎！
+@stop
 @section('sidebar')
-    
-
-    <p>This is appended to the master sidebar.</p>
+    @include('sidebar', array('currpage'=>'index'))
 @stop
 
 @section('content')
