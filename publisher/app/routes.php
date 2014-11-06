@@ -16,3 +16,4 @@ Route::get('/', function()
 	return View::make('hello');
 });
 Route::get('home/welcome', 'HomeController@showWelcome');
+Route::any('site/login','HomeController@login');

@@ -1,6 +1,7 @@
-<html>
+<!DOCTYPE html>
+<html lang="en-gb" dir="ltr" class="uk-height-1-1">
 <head>
-<title>@yield('title','代码发布系统')</title>
+<title>@section('title')代码发布系统@show</title>
 <link rel="stylesheet" href="/uikit/css/uikit.gradient.min.css" />
 </head>
     <body>

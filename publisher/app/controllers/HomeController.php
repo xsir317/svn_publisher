@@ -20,4 +20,13 @@ class HomeController extends BaseController {
 		return View::make('hello');
 	}
 
+	public function login()
+	{
+		if (Request::isMethod('post'))
+		{
+		    //
+		}
+		return View::make('login');
+	}
+
 }

@@ -1,7 +1,6 @@
 @extends('layouts.master')
 @section('title')
-欢迎！
-@stop
+欢迎！ @parent @stop
 @section('sidebar')
     @include('sidebar', array('currpage'=>'index'))
 @stop
