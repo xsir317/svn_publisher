@@ -8,7 +8,8 @@ class ProjectsController extends BaseController {
 
 	public function allProjects()
 	{
-		return 'todo';
+		$all_projects = Project::all();
+		return View::make('projects/index',array('projects' => $all_projects));
 	}
 
 }
