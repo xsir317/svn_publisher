@@ -5,7 +5,7 @@
 	@include('sidebar', array('currpage'=>'projects'))
 @stop
 
-@section('content')
+@section('content') 
 	<?php foreach($projects as $row):?>
 		<?php echo $row->title;?>
 	<?php endforeach;?>
