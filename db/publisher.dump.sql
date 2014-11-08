@@ -84,7 +84,9 @@ CREATE TABLE `projects` (
   `manager` varchar(16) NOT NULL COMMENT '项目负责人',
   `local_path` varchar(128) NOT NULL,
   `svn_addr` varchar(512) NOT NULL,
+  `current_version` varchar(64) NOT NULL,
   `ignore_files` varchar(512) NOT NULL COMMENT '同步时屏蔽哪些文件',
+  `comments` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -95,7 +97,7 @@ CREATE TABLE `projects` (
 
 LOCK TABLES `projects` WRITE;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-INSERT INTO `projects` VALUES (1,'星云','胡劼','nebula_root/','svn://192.168.104.21:8080/svn/nebula/trunk/server','nebula.txt');
+INSERT INTO `projects` VALUES (1,'星云','胡劼','nebula_root/','svn://192.168.104.21:8080/svn/nebula/trunk/server','','nebula.txt','');
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,6 +113,10 @@ CREATE TABLE `servers` (
   `project_id` int(11) NOT NULL COMMENT '关联projects',
   `title` varchar(64) NOT NULL COMMENT '服务器名',
   `ip` char(15) NOT NULL,
+  `rsync_name` varchar(64) NOT NULL COMMENT 'rsync同步的项目名',
+  `current_version` varchar(64) NOT NULL COMMENT '此服务器最后一次同步时的代码版本',
+  `last_pub_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '最后一次同步时间',
+  `comment` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -185,4 +191,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-08  1:04:51
+-- Dump completed on 2014-11-08 15:25:09
