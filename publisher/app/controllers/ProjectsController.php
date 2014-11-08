@@ -35,12 +35,13 @@ class ProjectsController extends BaseController {
                 $project = new Project;
                 //生成task checkout
             }
-            $project->title
+            //$project->title
             //manager
             //vcs_type
             //src_addr
             //ignore_files
             //comments
+            
         }
         else
         {

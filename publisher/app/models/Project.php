@@ -9,4 +9,8 @@ class Project extends Eloquent {
 	 * @var string
 	 */
 	protected $table = 'projects';
+
+    //自定义一些enum字段的含义
+    public static $vcs_types = array('svn' => 'SVN','git' => 'GIT');
+
 }
