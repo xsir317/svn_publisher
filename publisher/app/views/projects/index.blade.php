@@ -7,7 +7,7 @@
 
 @section('content') 
 <table class="uk-table">
-    <caption>所有项目</caption>
+    <caption>所有项目&nbsp;&nbsp;<a href="/projects/add" class="uk-button uk-button-primary">添加项目</a></caption>
     <thead>
         <tr>
             <th>项目</th>

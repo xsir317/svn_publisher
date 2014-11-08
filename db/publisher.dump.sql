@@ -72,6 +72,35 @@ INSERT INTO `apps` VALUES (943,'征途口袋版',1,'1.2.0','2014-11-05 16:00:00'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `missions`
+--
+
+DROP TABLE IF EXISTS `missions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `missions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` enum('checkout','update','delete','rsync') NOT NULL COMMENT '任务类型',
+  `command` varchar(1024) NOT NULL,
+  `status` enum('created','execute','success','failed') NOT NULL DEFAULT 'created',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `execute_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `output` text NOT NULL,
+  `uid` int(11) NOT NULL COMMENT '提交任务的用户',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='耗时任务，页面操作时写入此表，由cron负责执行后写回执行结果';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `missions`
+--
+
+LOCK TABLES `missions` WRITE;
+/*!40000 ALTER TABLE `missions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `missions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `projects`
 --
 
@@ -191,4 +220,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-08 15:25:09
+-- Dump completed on 2014-11-08 17:51:11
