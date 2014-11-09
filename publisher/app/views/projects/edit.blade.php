@@ -6,13 +6,13 @@
 @stop
 @section('content') 
 <?php if($project):?>
-{{ Form::model($project, array('url' => '/project/edit' ,'class' => 'uk-form uk-form-horizontal' )) }}
+{{ Form::model($project, array('url' => '/projects/edit' ,'class' => 'uk-form uk-form-horizontal' )) }}
     <div class="uk-form-row">
         <label class="uk-form-label">项目ID</label>
         <div class="uk-form-controls"><?php echo $project->id;?><?php echo Form::hidden('id',$project->id);?></div>
     </div>
 <?php else: ?>
-{{ Form::open(array('url' => '/project/add' ,'class' => 'uk-form uk-form-horizontal' )) }}
+{{ Form::open(array('url' => '/projects/add' ,'class' => 'uk-form uk-form-horizontal' )) }}
 <?php endif;?>
     <div class="uk-form-row">
         {{ Form::label('title','项目名',array('class' => 'uk-form-label')) }}
@@ -38,12 +38,14 @@
         {{ Form::text('src_addr',null,array('class'=>'uk-form-width-large')) }}
         </div>
     </div>
+    <?php if($project):?>
     <div class="uk-form-row">
         {{ Form::label('current_version','当前版本',array('class' => 'uk-form-label')) }}
         <div class="uk-form-controls">
-        {{ Form::text('current_version') }}
+        {{ $project->current_version }}
         </div>
     </div>
+    <?php endif;?>
     <div class="uk-form-row">
         {{ Form::label('ignore_files','同步时忽略',array('class' => 'uk-form-label')) }}
         <div class="uk-form-controls">
@@ -56,8 +58,11 @@
         {{ Form::textarea('comments',null,array('rows'=>3)) }}
         </div>
     </div>
+    <?php if($error):?>
+    <div class="uk-alert uk-alert-danger">{{ $error }}</div>
+    <?php endif;?>
     <div class="uk-form-row">
-        {{ Form::button('提交',array('class'=>'uk-button uk-button-primary')) }}
+        {{ Form::submit('提交',array('class'=>'uk-button uk-button-primary')) }}
     </div>
 {{ Form::close() }}
 @stop

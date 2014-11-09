@@ -84,11 +84,11 @@ CREATE TABLE `projects` (
   `manager` varchar(16) NOT NULL COMMENT '项目负责人',
   `vcs_type` enum('svn','git') NOT NULL DEFAULT 'svn' COMMENT '版本管理类型 默认svn 以后会支持git',
   `src_addr` varchar(512) NOT NULL,
-  `current_version` varchar(64) NOT NULL,
+  `current_version` varchar(64) NOT NULL DEFAULT '',
   `ignore_files` varchar(512) NOT NULL COMMENT '同步时屏蔽哪些文件',
   `comments` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,7 +97,7 @@ CREATE TABLE `projects` (
 
 LOCK TABLES `projects` WRITE;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-INSERT INTO `projects` VALUES (1,'星云','胡劼','svn','svn://192.168.104.21:8080/svn/nebula/trunk/server','','nebula.txt','');
+INSERT INTO `projects` VALUES (1,'星云','胡劼','git','svn://192.168.104.21:8080/svn/nebula/trunk/server/','','nebula.txt',''),(2,'SVN发布系统','胡劼','git','https://github.com/xsir317/svn_publisher.git','','db','git项目check出来好像未必是要同步的目录啊');
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,7 +194,8 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(32) NOT NULL,
-  `password` varchar(32) NOT NULL,
+  `password` varchar(64) NOT NULL,
+  `remember_token` char(128) NOT NULL,
   `is_superadmin` tinyint(4) NOT NULL DEFAULT '0' COMMENT '管理员权限',
   `login_ip` varchar(15) NOT NULL,
   `login_times` int(10) unsigned NOT NULL DEFAULT '0',
@@ -221,4 +222,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-08 19:29:51
+-- Dump completed on 2014-11-09 23:05:20

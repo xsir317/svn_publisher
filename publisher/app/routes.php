@@ -18,8 +18,8 @@ Route::get('/', function()
 Route::get('home/welcome', 'HomeController@showWelcome');
 
 Route::get('projects/index', 'ProjectsController@allProjects');
-Route::get('projects/add', 'ProjectsController@editProject');
-Route::get('projects/edit', 'ProjectsController@editProject');
+Route::any('projects/add', 'ProjectsController@editProject');
+Route::any('projects/edit', 'ProjectsController@editProject');
 
 Route::any('site/login','HomeController@login');
 
