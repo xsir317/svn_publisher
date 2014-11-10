@@ -15,6 +15,7 @@ ClassLoader::addDirectories(array(
 
 	app_path().'/commands',
 	app_path().'/controllers',
+    app_path().'/lib',
 	app_path().'/models',
 	app_path().'/database/seeds',
 
@@ -79,3 +80,8 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+App::bind('task', function()
+{
+    return new \TaskCore\TaskHelper;
+});

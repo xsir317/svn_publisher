@@ -9,6 +9,7 @@ class Tasks extends Eloquent {
      * @var string
      */
     protected $table = 'tasks';
+    public $timestamps = false;
 
     //自定义一些enum字段的含义
     public static $types = array(

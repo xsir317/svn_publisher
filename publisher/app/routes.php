@@ -23,3 +23,6 @@ Route::any('projects/edit', 'ProjectsController@editProject');
 
 Route::any('site/login','HomeController@login');
 
+Route::get('facade/test',function(){
+    return Task::work();
+});
