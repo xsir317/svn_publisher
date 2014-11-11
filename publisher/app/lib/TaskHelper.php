@@ -46,7 +46,7 @@ class TaskHelper
 		$record->pre_task = $pre_task;
 		$record->status = 'created';
 		$record->create_time = date('Y-m-d H:i:s');
-		$record->execute_time = '0';
+		$record->execute_time = '0000-00-00 00:00:00';
 		$record->output = '';
 		$record->uid = $uid;
 		$record->save();
