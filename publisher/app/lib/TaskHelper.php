@@ -6,6 +6,53 @@
 namespace TaskCore;
 class TaskHelper 
 {
+	private static $_error = '';
+
+	public function getError()
+	{
+		return self::$_error;
+	}
+
+	private function err($msg)
+	{
+		self::$_error = $msg;
+		return false;
+	}
+
+
+	public function create($action,$uid,$taskdata,$pre_task=0)
+	{
+		if(!isset(\Tasks::$types[$action]))
+		{
+			return $this->err('任务类型错误');
+		}
+		if(in_array($action,array('checkout', 'update', 'delete',)))
+		{
+			if(!isset($taskdata['project_id']))
+			{
+				return $this->err('需要project_id');
+			}
+		}
+		if(in_array($action,array('rsync')))
+		{
+			if(!isset($taskdata['server_id']))
+			{
+				return $this->err('需要server_id');
+			}
+		}
+		$record = new \Tasks;
+		$record->type = $action;
+		$record->command = json_encode($taskdata);
+		$record->pre_task = $pre_task;
+		$record->status = 'created';
+		$record->create_time = date('Y-m-d H:i:s');
+		$record->execute_time = '0';
+		$record->output = '';
+		$record->uid = $uid;
+		$record->save();
+		return $record->id;
+	}
+
 	/**
 	 * 
 	 * 针对一个任务，调用适当方法进行处理，处理后回写执行结果
@@ -50,7 +97,7 @@ class TaskHelper
 
     /**
      * 
-     * 针对一个服务器，调用Rsync将项目
+     * 针对一个服务器，调用Rsync将项目发布到线上，然后回写Server的版本和更新结果
      * 
     */
     private function _runRsync($task)

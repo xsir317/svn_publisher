@@ -43,13 +43,16 @@ class ProjectsController extends BaseController {
                     if($project->src_addr != $src_addr)
                     {
                         //生成task 清理当前source目录
+                        $clean_task = Task::create('delete',0,array('project_id'=>$project->id));
                         //生成task 重新checkout，注意前置任务
+                        Task::create('checkout',0,array('project_id'=>$project->id),$clean_task);
                     }
                 }
                 else
                 {
                     $project = new Project;
                     //生成task checkout
+                    Task::create('checkout',0,array('project_id'=>$project->id));
                 }
                 $project->title = trim(Input::get('title'));
                 $project->manager = trim(Input::get('manager'));
