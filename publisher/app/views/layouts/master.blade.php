@@ -10,22 +10,22 @@
                 <a class="uk-navbar-brand uk-hidden-small" href="layouts_frontpage.html">Brand</a>
                 <ul class="uk-navbar-nav uk-hidden-small">
                     <li>
-                        <a href="layouts_frontpage.html">Frontpage</a>
+                        <a href="/">首页</a>
                     </li>
                     <li>
-                        <a href="layouts_portfolio.html">Portfolio</a>
-                    </li>
-                    <li class="uk-active">
-                        <a href="layouts_blog.html">Blog</a>
+                        <a href="#">Portfolio</a>
                     </li>
                     <li>
-                        <a href="layouts_documentation.html">Documentation</a>
+                        <a href="#">Blog</a>
                     </li>
                     <li>
-                        <a href="layouts_contact.html">Contact</a>
+                        <a href="#">产品介绍</a>
                     </li>
                     <li>
-                        <a href="layouts_login.html">Login</a>
+                        <a href="#">联系我们</a>
+                    </li>
+                    <li>
+                        <a href="/logout">Login</a>
                     </li>
                 </ul>
                 <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>

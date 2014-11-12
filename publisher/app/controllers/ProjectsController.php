@@ -38,21 +38,21 @@ class ProjectsController extends BaseController {
             }
             if(!$error)
             {
+                $project_created = false;
                 if($project)
                 {
                     if($project->src_addr != $src_addr)
                     {
                         //生成task 清理当前source目录
-                        $clean_task = Task::create('delete',0,array('project_id'=>$project->id));
+                        $clean_task = Task::create('delete',Auth::id(),array('project_id'=>$project->id));
                         //生成task 重新checkout，注意前置任务
-                        Task::create('checkout',0,array('project_id'=>$project->id),$clean_task);
+                        Task::create('checkout',Auth::id(),array('project_id'=>$project->id),$clean_task);
                     }
                 }
                 else
                 {
                     $project = new Project;
-                    //生成task checkout
-                    Task::create('checkout',0,array('project_id'=>$project->id));
+                    $project_created = true;
                 }
                 $project->title = trim(Input::get('title'));
                 $project->manager = trim(Input::get('manager'));
@@ -65,10 +65,14 @@ class ProjectsController extends BaseController {
                     $project->vcs_type = array_pop(Project::$vcs_types);
                 }
                 $project->save();
+                if($project_created)
+                {
+                    //生成task checkout
+                    Task::create('checkout',Auth::id(),array('project_id'=>$project->id));
+                }
                 return Redirect::action('ProjectsController@allProjects');
             }
         }
         return View::make('projects/edit',array('project'=>$project,'error' => $error));
     }
-
 }
