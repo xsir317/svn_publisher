@@ -5,7 +5,7 @@ $sidebar = array(
     array('项目','/projects/index','projects','uk-icon-gear'),
     array('服务器','/servers/index','servers','uk-icon-laptop'),
     array('权限分配','/admin/index','roles','uk-icon-users'),
-    array('登出','/site/logout','logout','uk-icon-sign-out'),
+    array('登出','/logout','logout','uk-icon-sign-out'),
 );
 ?>
 <nav class="uk-panel uk-panel-box">

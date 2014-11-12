@@ -22,11 +22,18 @@ class HomeController extends BaseController {
 
 	public function login()
 	{
+		$msg = '';
 		if (Request::isMethod('post'))
 		{
-		    //
+		    if (Auth::attempt(array('username' => Request::get('username'), 'password' => Request::get('password')), intval(Request::get('remember_me'))))
+			{
+				return Redirect::to('/');
+			}
+			else
+			{
+				$msg = '登入失败，用户名/密码错误';
+			}
 		}
-		return View::make('login');
+		return View::make('login',array('msg'=>$msg));
 	}
-
 }

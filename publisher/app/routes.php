@@ -17,12 +17,19 @@ Route::get('/', function()
 });
 Route::get('home/welcome', 'HomeController@showWelcome');
 
-Route::get('projects/index', 'ProjectsController@allProjects');
-Route::any('projects/add', 'ProjectsController@editProject');
-Route::any('projects/edit', 'ProjectsController@editProject');
+//项目
+Route::get('projects/index', array('before' => 'auth', 'uses' => 'ProjectsController@allProjects'));
+Route::any('projects/add'  , array('before' => 'auth', 'uses' => 'ProjectsController@editProject'));
+Route::any('projects/edit' , array('before' => 'auth', 'uses' => 'ProjectsController@editProject'));
 
-Route::any('site/login','HomeController@login');
+//登入登出
+Route::any('login','HomeController@login');
+Route::get('logout',function(){
+	Auth::logout();
+	return Redirect::guest('login');
+});
 
-Route::get('facade/test',function(){
-    return Task::work();
+//各种测试
+Route::get('passwd/test',function(){
+    return  Hash::make('admin');
 });
