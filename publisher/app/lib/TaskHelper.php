@@ -61,8 +61,22 @@ class TaskHelper
 	*/
     public function run($task)
     {
-    	//TODO 检查状态 'created', 'execute', 'success', 'failed'
+    	if($task->status != 'created')
+        {
+            return $this->err('供执行的任务必须是初始状态');
+        }
     	//TODO 检查前置任务pre_task 的状态
+        if($task->pre_id)
+        {
+            $pre_task = \Tasks::find($task->pre_id);
+            if(!$pre_task || $pre_task->status != 'success')
+            {
+                return $this->err('前置任务尚未完成，跳过此任务');
+            }
+        }
+        $task->status = 'execute';
+        $task->execute_time = date('Y-m-d H:i:s');
+        $task->save();
         $func = '_run'.ucfirst($task->type);
         return $this->$func($task);
     }
@@ -73,7 +87,10 @@ class TaskHelper
     */
     private function _runCheckout($task)
     {
-
+        //get the project record
+        //get the project source path
+        //run the checkout command
+        //write the output to db, and status
     }
 
     /**
@@ -105,5 +122,21 @@ class TaskHelper
 
     }
 
+    /**
+    *
+    * 获得指定id的project的目录路径
+    */
+    private function _get_work_path($project_id)
+    {
+        return ;
+    }
 
+    /**
+    *
+    * 调用svn或git的log，获取版本号和更新文字日志
+    */
+    public function get_log($src_path,$type='svn',$limit=10,$offset=0)
+    {
+
+    }
 }

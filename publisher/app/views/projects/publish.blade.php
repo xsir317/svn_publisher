@@ -11,7 +11,7 @@
     <h3 class="uk-panel-title">{{{ $project->title }}} 详情</h3>
     <table class="uk-table">
         <tbody>
-            <tr><th>负责人</th><td>{{{ $project->title }}}</td></tr>
+            <tr><th>负责人</th><td>{{{ $project->manager }}}</td></tr>
             <tr><th>VCS系统</th><td>{{{ $project->vcs_type }}}</td></tr>
             <tr><th>源码地址</th><td>{{{ $project->src_addr }}}</td></tr>
             <tr><th>当前版本</th><td>{{{ $project->current_version }}}</td></tr>
@@ -19,7 +19,6 @@
             <tr><th>操作</th>
                 <td>
                     <button class="uk-button" id="version_select">版本选择</button>
-                    <button class="uk-button" id="add_server">新增服务器</button>
                 </td>
             </tr>
         </tbody>
@@ -29,7 +28,7 @@
 <?php if(!empty($project->servers)):?>
 <!--服务器列表-->
 <table class="uk-table">
-    <caption>所有项目&nbsp;&nbsp;<a href="/projects/add" class="uk-button uk-button-primary">添加项目</a></caption>
+    <caption>所有服务器&nbsp;&nbsp;<a href="/servers/add?project_id=<?php echo $project->id;?>" class="uk-button uk-button-primary">添加服务器</a></caption>
     <thead>
         <tr>
             <th>选择</th>
@@ -72,11 +71,6 @@
 var project_id = <?php echo intval($project->id);?>;
 //版本选择
 $("#version_select").click(function(){
-
-});
-
-//添加服务器
-$("#add_server").click(function(){
 
 });
 
