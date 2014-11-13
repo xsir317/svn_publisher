@@ -83,7 +83,7 @@ class ProjectsController extends BaseController {
     {
         //TODO 根据用户权限判断
         $id = intval(Input::get('id'));
-        $project = Project::find($id);
+        $project = Project::with('servers')->find($id);
         if(!$id || !$project)
         {
             return Response::view('errors.missing', array(), 404);
