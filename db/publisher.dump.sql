@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.12, for osx10.8 (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.16, for Win32 (x86)
 --
--- Host: 127.0.0.1    Database: publisher
+-- Host: localhost    Database: publisher
 -- ------------------------------------------------------
--- Server version	5.6.13-log
+-- Server version	5.6.16
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,62 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `apps`
---
-
-DROP TABLE IF EXISTS `apps`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `apps` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(15) NOT NULL,
-  `developer` int(11) NOT NULL DEFAULT '1' COMMENT '开发商（作者）',
-  `version` varchar(16) NOT NULL COMMENT 'app版本',
-  `app_updtime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'app更新时间',
-  `description` varchar(255) NOT NULL COMMENT '文字简介',
-  `screenshots` text NOT NULL COMMENT '软件截屏图',
-  `intro` text NOT NULL COMMENT '详细介绍',
-  `upd_info` varchar(512) NOT NULL COMMENT '更新信息UpdeteInfo',
-  `cover_img` varchar(255) NOT NULL COMMENT '大图',
-  `icon_img` varchar(128) NOT NULL COMMENT '图标图片',
-  `out_app_id` int(11) NOT NULL DEFAULT '0' COMMENT '官网的app_id',
-  `bbs_coverimg` varchar(255) NOT NULL,
-  `pkg_size` int(11) NOT NULL COMMENT '包大小字节数',
-  `pkg_name` varchar(255) NOT NULL COMMENT '包名，用于客户端检查是否安装等',
-  `pkg_url` varchar(255) NOT NULL COMMENT '下载地址',
-  `platform` enum('ANDROID','IOS','HTML5') NOT NULL,
-  `extra_mark` enum('firstpub','hot','recommend','lottery') NOT NULL,
-  `category_id` int(11) NOT NULL COMMENT '关联app_categorys',
-  `download_times` int(11) NOT NULL DEFAULT '0' COMMENT '下载次数',
-  `fake_downloads` int(11) NOT NULL DEFAULT '0' COMMENT '后台管理的下载次数（加）',
-  `focus_times` int(11) NOT NULL DEFAULT '0',
-  `grade_number` int(11) NOT NULL COMMENT '评分次数，每次评分后计算更新',
-  `avg_grade` decimal(3,2) NOT NULL COMMENT '平均分，每次评分后计算更新',
-  `credit_reward` int(11) NOT NULL DEFAULT '0' COMMENT '下载赠积分',
-  `display_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `display_end_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `display_order` int(11) NOT NULL,
-  `createtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `display_order` (`display_order`),
-  KEY `app_updtime` (`app_updtime`),
-  KEY `pkg_name` (`pkg_name`(32)),
-  KEY `avg_grade` (`avg_grade`),
-  KEY `bbs_id` (`out_app_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=944 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `apps`
---
-
-LOCK TABLES `apps` WRITE;
-/*!40000 ALTER TABLE `apps` DISABLE KEYS */;
-INSERT INTO `apps` VALUES (943,'征途口袋版',1,'1.2.0','2014-11-05 16:00:00','《征途》手游是由巨人移动精心研发运营的一款国战手机游戏，游戏继承了大量《征途2》备受玩家好评的经典玩法，并结合了移动设备的特性进行了有针对性的优化和扩展，使得广大征途玩家在手机上也能体验到细腻的电影式画面、震撼人心的千人国战和激情PK。经典国家阵营概念，兄弟家族合力断金，战场厮杀血战，经典装备养成玩法，带你领略一样的征途，不一样的体验！\r\n国战正统手游王者回归，火爆内测即将开启！小伙伴们，准备好了么？一起来战！','<img src=\"http://huodong.gamm.ztgame.com/upload/day_141106/124240b3c993ae.jpg\" alt=\"\" /><img src=\"http://huodong.gamm.ztgame.com/upload/day_141106/12424556ef02cc.jpg\" alt=\"\" /><img src=\"http://huodong.gamm.ztgame.com/upload/day_141106/1242494c7cc6a8.jpg\" alt=\"\" /><img src=\"http://huodong.gamm.ztgame.com/upload/day_141106/124253b60c4b73.jpg\" alt=\"\" /><img src=\"http://huodong.gamm.ztgame.com/upload/day_141106/1242564ceec4dd.jpg\" alt=\"\" />','《征途》手游是由巨人移动精心研发运营的一款国战手机游戏，游戏继承了大量《征途2》备受玩家好评的经典玩法，并结合了移动设备的特性进行了有针对性的优化和扩展，使得广大征途玩家在手机上也能体验到细腻的电影式画面、震撼人心的千人国战和激情PK。经典国家阵营概念，兄弟家族合力断金，战场厮杀血战，经典装备养成玩法，带你领略一样的征途，不一样的体验！\r\n国战正统手游王者回归，火爆内测即将开启！小伙伴们，准备好了么？一起来战！','','http://huodong.gamm.ztgame.com/upload/day_141106/125833fba9a8be.jpg','http://huodong.gamm.ztgame.com/upload/day_141106/1258338804dafd.png',0,'',145000000,'com.ztgame.ztmobiletest.xingyun','http://download.gamm.ztgame.com/zt_xingyun.apk','ANDROID','firstpub',1,0,11352,0,0,0.00,299,'2014-11-05 16:00:00','2014-11-29 16:00:00',0,'2014-11-06 07:29:37');
-/*!40000 ALTER TABLE `apps` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `projects`
@@ -88,7 +32,7 @@ CREATE TABLE `projects` (
   `ignore_files` varchar(512) NOT NULL COMMENT '同步时屏蔽哪些文件',
   `comments` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,7 +41,7 @@ CREATE TABLE `projects` (
 
 LOCK TABLES `projects` WRITE;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-INSERT INTO `projects` VALUES (1,'星云','胡劼','git','svn://192.168.104.21:8080/svn/nebula/trunk/server/','','nebula.txt',''),(2,'SVN发布系统','胡劼','git','https://github.com/xsir317/svn_publisher.git','','db','git项目check出来好像未必是要同步的目录啊');
+INSERT INTO `projects` VALUES (1,'星云','胡劼','git','http://192.168.104.21:8080/svn/apps/nebula/trunk/server','','nebula.txt',''),(2,'SVN发布系统','胡劼','git','https://github.com/xsir317/svn_publisher.git','','db','git项目check出来好像未必是要同步的目录啊'),(3,'手机助手','胡劼','git','http://192.168.104.21:8080/svn/apps/gamm/trunk/service','','',''),(4,'星云后台','胡劼','git','http://192.168.104.21:8080/svn/apps/nebula/trunk/server/admin','','.svn','');
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,7 +92,7 @@ CREATE TABLE `tasks` (
   `output` text NOT NULL,
   `uid` int(11) NOT NULL COMMENT '提交任务的用户',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='耗时任务，页面操作时写入此表，由cron负责执行后写回执行结果';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='耗时任务，页面操作时写入此表，由cron负责执行后写回执行结果';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,6 +101,7 @@ CREATE TABLE `tasks` (
 
 LOCK TABLES `tasks` WRITE;
 /*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
+INSERT INTO `tasks` VALUES (1,'delete','{\"project_id\":1}',0,'created','2014-11-11 11:09:10','0000-00-00 00:00:00','',0),(2,'checkout','{\"project_id\":1}',1,'created','2014-11-11 11:09:10','0000-00-00 00:00:00','',0),(3,'delete','{\"project_id\":1}',0,'created','2014-11-12 08:36:40','0000-00-00 00:00:00','',1),(4,'checkout','{\"project_id\":1}',3,'created','2014-11-12 08:36:40','0000-00-00 00:00:00','',1),(5,'checkout','{\"project_id\":4}',0,'created','2014-11-12 10:26:57','0000-00-00 00:00:00','',1);
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -201,7 +146,7 @@ CREATE TABLE `users` (
   `login_times` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,6 +155,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'admin','$2y$10$Pv3DHJ7khXy3XGm0ECZNv.jGoRkllyXKyLxWBCNsOOvRbkbAdcjIe','mOsWbYJbKQN4aAbJqn6V0BWgkD27Y5TmvK2jMqp8PnCp7ooJDzZmKOBAAZBw',1,'',0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -222,4 +168,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-11  0:43:23
+-- Dump completed on 2014-11-13 14:56:10

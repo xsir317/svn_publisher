@@ -21,6 +21,7 @@ Route::get('home/welcome', 'HomeController@showWelcome');
 Route::get('projects/index', array('before' => 'auth', 'uses' => 'ProjectsController@allProjects'));
 Route::any('projects/add'  , array('before' => 'auth', 'uses' => 'ProjectsController@editProject'));
 Route::any('projects/edit' , array('before' => 'auth', 'uses' => 'ProjectsController@editProject'));
+Route::get('projects/publish',array('before' => 'auth', 'uses' => 'ProjectsController@publish'));
 
 //登入登出
 Route::any('login','HomeController@login');

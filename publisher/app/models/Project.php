@@ -14,4 +14,8 @@ class Project extends Eloquent {
     //自定义一些enum字段的含义
     public static $vcs_types = array('svn' => 'SVN','git' => 'GIT');
 
+    public function servers()
+    {
+    	return $this->hasMany('Server','project_id');
+    }
 }

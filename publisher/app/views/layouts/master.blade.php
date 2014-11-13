@@ -43,8 +43,9 @@
                 </div>
             </div>
     </div>
+@section('js')
 <script type="text/javascript" src="//lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js"></script>
 <script type="text/javascript" src="/uikit/js/uikit.min.js"></script>
-        @section('js')@show
+@show
     </body>
 </html>

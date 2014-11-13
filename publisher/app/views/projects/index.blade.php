@@ -24,7 +24,7 @@
             <td><?php echo $row->current_version;?></td>
             <td>
                 <a href="/projects/edit?id=<?php echo $row->id;?>" class="uk-button">详细</a>
-                <a href="/servers/project_id/<?php echo $row->id;?>" class="uk-button">发布</a>
+                <a href="/projects/publish?id=<?php echo $row->id;?>" class="uk-button">发布</a>
             </td>
         </tr>
     <?php endforeach;?>

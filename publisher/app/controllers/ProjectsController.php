@@ -8,12 +8,14 @@ class ProjectsController extends BaseController {
 
 	public function allProjects()
 	{
+        //TODO 根据用户权限筛选
 		$all_projects = Project::all();
 		return View::make('projects/index',array('projects' => $all_projects));
 	}
 
     public function editProject()
     {
+        //TODO 根据用户权限判断
         $id = Input::get('id');
         $project = null;
         if($id)
@@ -74,5 +76,18 @@ class ProjectsController extends BaseController {
             }
         }
         return View::make('projects/edit',array('project'=>$project,'error' => $error));
+    }
+
+
+    public function publish()
+    {
+        //TODO 根据用户权限判断
+        $id = intval(Input::get('id'));
+        $project = Project::find($id);
+        if(!$id || !$project)
+        {
+            return Response::view('errors.missing', array(), 404);
+        }
+        return View::make('projects/publish',array('project'=>$project));
     }
 }
