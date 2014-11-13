@@ -16,6 +16,6 @@ class Project extends Eloquent {
 
     public function servers()
     {
-    	return $this->hasMany('Server','project_id');
+    	return $this->hasMany('Server','project_id','id');
     }
 }

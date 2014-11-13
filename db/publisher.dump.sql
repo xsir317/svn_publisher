@@ -62,7 +62,7 @@ CREATE TABLE `servers` (
   `last_pub_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '最后一次同步时间',
   `comment` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,6 +71,7 @@ CREATE TABLE `servers` (
 
 LOCK TABLES `servers` WRITE;
 /*!40000 ALTER TABLE `servers` DISABLE KEYS */;
+INSERT INTO `servers` VALUES (1,1,'星云测试服1','127.0.0.1','192.168.104.20','','0000-00-00 00:00:00','');
 /*!40000 ALTER TABLE `servers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,4 +169,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-13 14:56:10
+-- Dump completed on 2014-11-13 18:24:59

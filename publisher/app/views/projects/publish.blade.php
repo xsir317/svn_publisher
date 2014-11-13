@@ -18,8 +18,8 @@
             <tr><th>备注</th><td>{{{ $project->comments }}}</td></tr>
             <tr><th>操作</th>
                 <td>
-                    <button class="uk-button">版本选择</button>
-                    <button class="uk-button">新增服务器</button>
+                    <button class="uk-button" id="version_select">版本选择</button>
+                    <button class="uk-button" id="add_server">新增服务器</button>
                 </td>
             </tr>
         </tbody>
@@ -57,14 +57,35 @@
 </table>
 <!--文件对比-->
 <div class="uk-panel">
-    <h3 class="uk-panel-title">文件对比</h3>
+    <h3 class="uk-panel-title">待同步文件列表</h3>
 </div>
 <!--操作按钮-->
+<div class="uk-panel">
+   <button class="uk-button" id="dosync">同步</button>
+</div>
 <?php endif;?>
 @stop
-$section('js')
+
+@section('js')
 @parent
 <script type="text/javascript">
+var project_id = <?php echo intval($project->id);?>;
+//版本选择
+$("#version_select").click(function(){
 
+});
+
+//添加服务器
+$("#add_server").click(function(){
+
+});
+
+//操作同步
+$("#dosync").click(function(){
+    //将选中的服务器提交给服务端
+    //获得返回的 服务器id=>任务
+});
+
+//查询任务完成情况
 </script>
 @stop

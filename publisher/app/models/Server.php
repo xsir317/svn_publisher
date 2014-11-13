@@ -3,7 +3,6 @@
 class Server extends Eloquent {
 
 	protected $table = 'servers';
-
 	public $timestamps = false;
 
 	public function project()
