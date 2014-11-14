@@ -23,7 +23,12 @@
             </tr>
         </tbody>
     </table>
-    
+</div>
+<div id="version_box">
+    <div class="uk-modal-dialog">
+        <a class="uk-modal-close uk-close"></a>
+        ...
+    </div>
 </div>
 <?php if(!empty($project->servers)):?>
 <!--服务器列表-->
@@ -68,11 +73,34 @@
 @section('js')
 @parent
 <script type="text/javascript">
+//当前展示的项目id
 var project_id = <?php echo intval($project->id);?>;
+//看log历史翻页用的最后版本
+var lastlog = '';
 //版本选择
+var version_log_box = $("#version_box");
 $("#version_select").click(function(){
-
+    var thisbtn = $(this);
+    thisbtn.attr("disabled","disabled").html("载入中...");
+    //清理所有已经载入的页
+    lastlog = '';
+    version_log_box.html('');
+    load_log_data(function(){thisbtn.removeAttr("disabled").html("版本选择");});
 });
+
+load_log_data = function(__callback){
+    $.getJSON("projects/srclog",{id:project_id, limit:10, last:lastlog},function(_data){
+        if(!_data.last || _data.last == lastlog)
+        {
+            alert("没有更多数据了");
+            return false;
+        }
+        if(typeof(__callback) == 'function')
+        {
+            __callback();
+        }
+    });
+}
 
 //操作同步
 $("#dosync").click(function(){

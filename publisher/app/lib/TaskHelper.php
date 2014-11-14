@@ -128,15 +128,56 @@ class TaskHelper
     */
     private function _get_work_path($project_id)
     {
-        return ;
+        $path = app_path().'/storage/project_base_'.$project_id;
+        if(!file_exists($path))
+        {
+            mkdir($path);
+        }
+        return $path;
     }
 
     /**
     *
     * 调用svn或git的log，获取版本号和更新文字日志
+    * @param $src_path 地址
+    * @param $type='svn' svn或者git
+    * @param $auth=null  帐号密码
+    * @param $limit=10 数量
+    * @param $last=''  从某版本开始查询
     */
-    public function get_log($src_path,$type='svn',$limit=10,$offset=0)
+    public function get_log($src_path,$type='svn',$auth=null,$limit=10,$last='')
     {
+        //如果last没指定，则取最新limit个
+        //如果指定了，则取limit+1个，去掉last
+        switch ($type) {
+            case 'svn':
+                $cmd = "svn log {$src_path} --xml --non-interactive --stop-on-copy";
+                if(!empty($auth))
+                {
+                    $cmd .= " --username {$auth['username']} --password {$auth['password']}";
+                }
+                if($last)
+                {
+                    $cmd .= " -r {$last}:1 --limit ".($limit +1);
+                }
+                else
+                {
+                    $cmd .= " --limit {$limit}";
+                }
+                $cmdresult = `$cmd`;
+                $loadxml = simplexml_load_string(trim($cmdresult), 'SimpleXMLElement', LIBXML_NOCDATA);
+                $out = array();
+                foreach($loadxml->children() as $elem)
+                {
+                    $out[(string)$elem->attributes()->revision] = $elem->author.":".$elem->msg;
+                }
+                if($last && isset($out[$last])) unset($out[$last]);
+                return $out;
+            case 'git':
 
+                break;
+            default:
+                return null;
+        }
     }
 }

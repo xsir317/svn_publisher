@@ -5,7 +5,6 @@ class ProjectsController extends BaseController {
 	/*
 		项目列表
 	*/
-
 	public function allProjects()
 	{
         //TODO 根据用户权限筛选
@@ -89,5 +88,24 @@ class ProjectsController extends BaseController {
             return Response::view('errors.missing', array(), 404);
         }
         return View::make('projects/publish',array('project'=>$project));
+    }
+
+    public function getSrclog()
+    {
+        //TODO 根据用户权限判断
+        $id = intval(Input::get('id'));
+        $project = Project::with('servers')->find($id);
+        if(!$id || !$project)
+        {
+            return Response::view('errors.missing', array(), 404);
+        }
+        $limit = intval(Input::get('limit'));
+        $limit = $limit ? $limit : 10;
+        $last = trim(Input::get('last'));
+        $last = $last ? $last : '';
+        $auth_info = empty($project->auth_info) ? null : json_decode($project->auth_info,true);
+        $logs = Task::get_log($project->src_addr,$project->vcs_type,$auth_info,$limit,$last);
+        $last_version = empty($logs) ? $last : last(array_keys($logs));
+        return Response::json(array('logs' => $logs, 'last' => $last_version ));
     }
 }
