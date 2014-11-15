@@ -61,6 +61,8 @@ class ProjectsController extends BaseController {
                 $project->src_addr = $src_addr;
                 $project->ignore_files = trim(Input::get('ignore_files'));
                 $project->comments = trim(Input::get('comments'));
+                $project->username = trim(Input::get('username'));
+                $project->password = trim(Input::get('password'));
                 if(!in_array($project->vcs_type, Project::$vcs_types))
                 {
                     $project->vcs_type = array_pop(Project::$vcs_types);

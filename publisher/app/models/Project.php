@@ -18,4 +18,36 @@ class Project extends Eloquent {
     {
     	return $this->hasMany('Server','project_id','id');
     }
+
+    public function getUsernameAttribute()
+    {
+        if(!$this->auth_info) return '';
+        $_tmp = json_decode($this->auth_info,true);
+        return $_tmp['username'];
+    }
+
+    public function setUsernameAttribute($val)
+    {
+        $_tmp = $this->auth_info ? json_decode($this->auth_info,true) : array('username' =>'','password'=>'');
+        $_tmp['username'] = $val;
+        $this->auth_info = json_encode($_tmp);
+        if($_tmp['username'] == '' && $_tmp['password'] == '')
+            $this->auth_info = '';
+    }
+
+    public function getPasswordAttribute()
+    {
+        if(!$this->auth_info) return '';
+        $_tmp = json_decode($this->auth_info,true);
+        return $_tmp['password'];
+    }
+
+    public function setPasswordAttribute($val)
+    {
+        $_tmp = $this->auth_info ? json_decode($this->auth_info,true) : array('username' =>'','password'=>'');
+        $_tmp['password'] = $val;
+        $this->auth_info = json_encode($_tmp);
+        if($_tmp['username'] == '' && $_tmp['password'] == '')
+            $this->auth_info = '';
+    }
 }

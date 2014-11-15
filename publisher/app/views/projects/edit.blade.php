@@ -38,6 +38,12 @@
         {{ Form::text('src_addr',null,array('class'=>'uk-form-width-large')) }}
         </div>
     </div>
+    <div class="uk-form-row">
+        {{ Form::label('username','账号密码',array('class' => 'uk-form-label')) }}
+        <div class="uk-form-controls">
+        {{ Form::text('username') }}&nbsp;{{ Form::text('password') }}
+        </div>
+    </div>
     <?php if($project):?>
     <div class="uk-form-row">
         {{ Form::label('current_version','当前版本',array('class' => 'uk-form-label')) }}
