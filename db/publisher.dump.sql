@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.16, for Win32 (x86)
+-- MySQL dump 10.13  Distrib 5.6.12, for osx10.8 (x86_64)
 --
--- Host: localhost    Database: publisher
+-- Host: 127.0.0.1    Database: publisher
 -- ------------------------------------------------------
--- Server version	5.6.16
+-- Server version	5.6.13-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -28,6 +28,7 @@ CREATE TABLE `projects` (
   `manager` varchar(16) NOT NULL COMMENT '项目负责人',
   `vcs_type` enum('svn','git') NOT NULL DEFAULT 'svn' COMMENT '版本管理类型 默认svn 以后会支持git',
   `src_addr` varchar(512) NOT NULL,
+  `auth_info` varchar(255) NOT NULL DEFAULT '',
   `current_version` varchar(64) NOT NULL DEFAULT '',
   `ignore_files` varchar(512) NOT NULL COMMENT '同步时屏蔽哪些文件',
   `comments` varchar(512) NOT NULL,
@@ -41,7 +42,7 @@ CREATE TABLE `projects` (
 
 LOCK TABLES `projects` WRITE;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-INSERT INTO `projects` VALUES (1,'星云','胡劼','git','http://192.168.104.21:8080/svn/apps/nebula/trunk/server','','nebula.txt',''),(2,'SVN发布系统','胡劼','git','https://github.com/xsir317/svn_publisher.git','','db','git项目check出来好像未必是要同步的目录啊'),(3,'手机助手','胡劼','git','http://192.168.104.21:8080/svn/apps/gamm/trunk/service','','',''),(4,'星云后台','胡劼','git','http://192.168.104.21:8080/svn/apps/nebula/trunk/server/admin','','.svn','');
+INSERT INTO `projects` VALUES (1,'星云','胡劼','svn','svn://60.191.239.186/svnroot','','','nebula.txt',''),(2,'SVN发布系统','胡劼','git','https://github.com/xsir317/svn_publisher.git','','','db','git项目check出来好像未必是要同步的目录啊'),(3,'手机助手','胡劼','git','http://192.168.104.21:8080/svn/apps/gamm/trunk/service','','','',''),(4,'星云后台','胡劼','git','http://192.168.104.21:8080/svn/apps/nebula/trunk/server/admin','','','.svn','');
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -93,7 +94,7 @@ CREATE TABLE `tasks` (
   `output` text NOT NULL,
   `uid` int(11) NOT NULL COMMENT '提交任务的用户',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='耗时任务，页面操作时写入此表，由cron负责执行后写回执行结果';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='耗时任务，页面操作时写入此表，由cron负责执行后写回执行结果';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,7 +103,7 @@ CREATE TABLE `tasks` (
 
 LOCK TABLES `tasks` WRITE;
 /*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
-INSERT INTO `tasks` VALUES (1,'delete','{\"project_id\":1}',0,'created','2014-11-11 11:09:10','0000-00-00 00:00:00','',0),(2,'checkout','{\"project_id\":1}',1,'created','2014-11-11 11:09:10','0000-00-00 00:00:00','',0),(3,'delete','{\"project_id\":1}',0,'created','2014-11-12 08:36:40','0000-00-00 00:00:00','',1),(4,'checkout','{\"project_id\":1}',3,'created','2014-11-12 08:36:40','0000-00-00 00:00:00','',1),(5,'checkout','{\"project_id\":4}',0,'created','2014-11-12 10:26:57','0000-00-00 00:00:00','',1);
+INSERT INTO `tasks` VALUES (1,'delete','{\"project_id\":1}',0,'created','2014-11-11 11:09:10','0000-00-00 00:00:00','',0),(2,'checkout','{\"project_id\":1}',1,'created','2014-11-11 11:09:10','0000-00-00 00:00:00','',0),(3,'delete','{\"project_id\":1}',0,'created','2014-11-12 08:36:40','0000-00-00 00:00:00','',1),(4,'checkout','{\"project_id\":1}',3,'created','2014-11-12 08:36:40','0000-00-00 00:00:00','',1),(5,'checkout','{\"project_id\":4}',0,'created','2014-11-12 10:26:57','0000-00-00 00:00:00','',1),(6,'delete','{\"project_id\":\"1\"}',0,'created','2014-11-15 07:24:38','0000-00-00 00:00:00','',1),(7,'checkout','{\"project_id\":\"1\"}',6,'created','2014-11-15 07:24:38','0000-00-00 00:00:00','',1);
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,4 +170,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-13 18:24:59
+-- Dump completed on 2014-11-15 16:42:48

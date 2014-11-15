@@ -24,10 +24,13 @@
         </tbody>
     </table>
 </div>
-<div id="version_box">
+<div id="version_box" class="uk-modal">
     <div class="uk-modal-dialog">
         <a class="uk-modal-close uk-close"></a>
-        ...
+        <div class="modal_content"></div>
+        <div class="uk-panel uk-panel-box">
+            <button class="uk-button uk-button-success">确定</button>
+        </div>
     </div>
 </div>
 <?php if(!empty($project->servers)):?>
@@ -78,7 +81,8 @@ var project_id = <?php echo intval($project->id);?>;
 //看log历史翻页用的最后版本
 var lastlog = '';
 //版本选择
-var version_log_box = $("#version_box");
+var version_log_box = $("#version_box .modal_content");
+var modal = $.UIkit.modal("#version_box");
 $("#version_select").click(function(){
     var thisbtn = $(this);
     thisbtn.attr("disabled","disabled").html("载入中...");
@@ -89,11 +93,31 @@ $("#version_select").click(function(){
 });
 
 load_log_data = function(__callback){
-    $.getJSON("projects/srclog",{id:project_id, limit:10, last:lastlog},function(_data){
+    $.getJSON("/projects/srclog",{id:project_id, limit:10, last:lastlog},function(_data){
         if(!_data.last || _data.last == lastlog)
         {
             alert("没有更多数据了");
-            return false;
+        }
+        else
+        {
+            lastlog = _data.last;
+            //如果没有ul就增加一个
+            if(version_log_box.find("ul").length == 0)
+            {
+                $('<ul class="uk-list"></ul>').appendTo(version_log_box);
+            }
+            var _ul = version_log_box.find("ul");
+            for (var _key in _data.logs ) {
+                $("<label/>").append(
+                    $("<input/>").attr({
+                        type: 'radio',
+                        value: _key,
+                        name: "version_select"
+                    })).append(_data.logs[_key])
+                    .appendTo($("<li/>")
+                        .appendTo(_ul));
+            }
+            modal.show();
         }
         if(typeof(__callback) == 'function')
         {
