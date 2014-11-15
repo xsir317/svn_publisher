@@ -63,9 +63,9 @@ class ProjectsController extends BaseController {
                 $project->comments = trim(Input::get('comments'));
                 $project->username = trim(Input::get('username'));
                 $project->password = trim(Input::get('password'));
-                if(!in_array($project->vcs_type, Project::$vcs_types))
+                if(!isset(Project::$vcs_types[$project->vcs_type]))
                 {
-                    $project->vcs_type = array_pop(Project::$vcs_types);
+                    $project->vcs_type = last(array_keys(Project::$vcs_types));
                 }
                 $project->save();
                 if($project_created)
