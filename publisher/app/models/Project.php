@@ -28,6 +28,7 @@ class Project extends Eloquent {
 
     public function setUsernameAttribute($val)
     {
+        $val = trim($val);
         $_tmp = $this->auth_info ? json_decode($this->auth_info,true) : array('username' =>'','password'=>'');
         $_tmp['username'] = $val;
         $this->auth_info = json_encode($_tmp);
@@ -44,6 +45,7 @@ class Project extends Eloquent {
 
     public function setPasswordAttribute($val)
     {
+        $val = trim($val);
         $_tmp = $this->auth_info ? json_decode($this->auth_info,true) : array('username' =>'','password'=>'');
         $_tmp['password'] = $val;
         $this->auth_info = json_encode($_tmp);
