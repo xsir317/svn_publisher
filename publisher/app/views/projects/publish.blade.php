@@ -18,7 +18,7 @@
             <tr><th>备注</th><td>{{{ $project->comments }}}</td></tr>
             <tr><th>操作</th>
                 <td>
-                    <button class="uk-button" id="version_select">版本选择</button>
+                    <button class="uk-button" id="version_select">版本选择</button>&nbsp;已经选择版本：<span id="show_selected_version"></span>
                 </td>
             </tr>
         </tbody>
@@ -29,12 +29,14 @@
         <a class="uk-modal-close uk-close"></a>
         <div class="modal_content"></div>
         <div class="uk-panel uk-panel-box">
-            <button class="uk-button uk-button-success">确定</button>
+            <button class="uk-button uk-button-success" id="select_version_btn">确定</button>
         </div>
     </div>
 </div>
 <?php if(!empty($project->servers)):?>
 <!--服务器列表-->
+{{ Form::open(array("id"=>"publish_form")) }}
+{{ Form::hidden("project_select_version","") }}
 <table class="uk-table">
     <caption>所有服务器&nbsp;&nbsp;<a href="/servers/add?project_id=<?php echo $project->id;?>" class="uk-button uk-button-primary">添加服务器</a></caption>
     <thead>
@@ -70,6 +72,7 @@
 <div class="uk-panel">
    <button class="uk-button" id="dosync">同步</button>
 </div>
+{{ Form::close() }}
 <?php endif;?>
 @stop
 
@@ -126,10 +129,24 @@ load_log_data = function(__callback){
     });
 }
 
+$("#select_version_btn").click(function(event) {
+    var selected = $("input[name='version_select']:checked").val();
+    if(!selected) 
+    {
+        alert("请选择有效的版本");
+        return false;
+    }
+    $("#show_selected_version").html(selected);
+    $("input[name='project_select_version']").val(selected);
+    modal.hide();
+});
 //操作同步
 $("#dosync").click(function(){
     //将选中的服务器提交给服务端
-    //获得返回的 服务器id=>任务
+    //包括选择的更新版本、选择的服务器
+    //服务器接受项目id，更新的目标版本，服务器id
+    //服务器设定更新项目，同步的一系列先后任务
+    //返回给前端展示
 });
 
 //查询任务完成情况
