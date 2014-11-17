@@ -164,10 +164,8 @@ class TaskHelper
                 {
                     $cmd .= " --limit {$limit}";
                 }
-                //$cmdresult = `$cmd`;
-                $cmdresult = '<?xml version="1.0" encoding="UTF-8"?>
-<log><logentry revision="530"><author>测试用户</author><msg>测试文字</msg></logentry>
-<logentry revision="529"><author>测试用户</author><msg>测试文字</msg></logentry></log>';
+                $cmdresult = `$cmd`;
+                /*//$cmdresult = '<?xml version="1.0" encoding="UTF-8"?><log><logentry revision="530"><author>测试用户</author><msg>测试文字</msg></logentry><logentry revision="529"><author>测试用户</author><msg>测试文字</msg></logentry></log>';*/
                 $loadxml = simplexml_load_string(trim($cmdresult), 'SimpleXMLElement', LIBXML_NOCDATA);
                 $out = array();
                 foreach($loadxml->children() as $elem)

@@ -30,13 +30,15 @@
         <div class="modal_content"></div>
         <div class="uk-panel uk-panel-box">
             <button class="uk-button uk-button-success" id="select_version_btn">确定</button>
+            <button class="uk-button uk-button-success" id="next_page_btn">后十项 &gt;</button>
         </div>
     </div>
 </div>
 <?php if(!empty($project->servers)):?>
 <!--服务器列表-->
-{{ Form::open(array("id"=>"publish_form")) }}
+{{ Form::open(array("id"=>"publish_form","url"=>"/projects/dopublish","onsubmit"=>"return false;")) }}
 {{ Form::hidden("project_select_version","") }}
+{{ Form::hidden("id",$project->id) }}
 <table class="uk-table">
     <caption>所有服务器&nbsp;&nbsp;<a href="/servers/add?project_id=<?php echo $project->id;?>" class="uk-button uk-button-primary">添加服务器</a></caption>
     <thead>
@@ -51,7 +53,7 @@
     </thead>
     <tbody>
     <?php foreach($project->servers as $row):?>
-        <tr>
+        <tr class="server_row server_<?php echo $row->id;?>">
             <td><?php echo Form::checkbox("publish_box",$row->id);?></td>
             <td><?php echo $row->title;?></td>
             <td><?php echo $row->ip;?></td>
@@ -70,7 +72,7 @@
 </div>
 <!--操作按钮-->
 <div class="uk-panel">
-   <button class="uk-button" id="dosync">同步</button>
+   <button class="uk-button" id="dosync">发布</button>
 </div>
 {{ Form::close() }}
 <?php endif;?>
@@ -116,7 +118,7 @@ load_log_data = function(__callback){
                         type: 'radio',
                         value: _key,
                         name: "version_select"
-                    })).append(_data.logs[_key])
+                    })).append("version:"+_key + " " + _data.logs[_key])
                     .appendTo($("<li/>")
                         .appendTo(_ul));
             }
@@ -139,6 +141,11 @@ $("#select_version_btn").click(function(event) {
     $("#show_selected_version").html(selected);
     $("input[name='project_select_version']").val(selected);
     modal.hide();
+});
+
+$("#next_page_btn").click(function(){
+    version_log_box.html('');
+    load_log_data();
 });
 //操作同步
 $("#dosync").click(function(){
