@@ -54,7 +54,7 @@
     <tbody>
     <?php foreach($project->servers as $row):?>
         <tr class="server_row server_<?php echo $row->id;?>">
-            <td><?php echo Form::checkbox("publish_box",$row->id);?></td>
+            <td><?php echo Form::checkbox("publish_box[]",$row->id);?></td>
             <td><?php echo $row->title;?></td>
             <td><?php echo $row->ip;?></td>
             <td><?php echo $row->current_version;?></td>
@@ -149,11 +149,28 @@ $("#next_page_btn").click(function(){
 });
 //操作同步
 $("#dosync").click(function(){
-    //将选中的服务器提交给服务端
-    //包括选择的更新版本、选择的服务器
-    //服务器接受项目id，更新的目标版本，服务器id
-    //服务器设定更新项目，同步的一系列先后任务
-    //返回给前端展示
+    if(!$("input[name='project_select_version']").val())
+    {
+        alert("请选择有效的版本");
+        return false;
+    }
+    if(0 == $("input[name='publish_box[]']:checked").length)
+    {
+        alert("请选择发布的服务器");
+        return false;
+    }
+    var _confirm = "您是否确认将版本"+$("input[name='project_select_version']").val()+"发布到\n";
+    $(".server_row").each(function(){
+        if($(this).find($("input[name='publish_box[]']:checked")).length > 0)
+        {
+            _confirm += "\n" + $(this).find("td:eq(1)").html();
+        }
+    });
+    if(window.confirm(_confirm))
+    {
+        //提交
+        alert("yes");
+    }
 });
 
 //查询任务完成情况
