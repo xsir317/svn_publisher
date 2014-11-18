@@ -169,7 +169,12 @@ $("#dosync").click(function(){
     if(window.confirm(_confirm))
     {
         //提交
-        alert("yes");
+        $.post($("#publish_form").attr("action"),$("#publish_form").serialize(),function(_data){
+            //状态，提示信息
+            //设定项目update的任务号
+            //设定每个服务器更新的任务号
+            //启动轮询
+        },'json');
     }
 });
 

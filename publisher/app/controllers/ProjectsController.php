@@ -92,6 +92,17 @@ class ProjectsController extends BaseController {
         return View::make('projects/publish',array('project'=>$project));
     }
 
+    public function dopublish()
+    {
+        //TODO 根据用户权限判断
+        $id = intval(Input::get('id'));
+        $version = trim(Input::get('version'));
+        
+        //project version
+        //servers
+
+    }
+
     public function getSrclog()
     {
         //TODO 根据用户权限判断

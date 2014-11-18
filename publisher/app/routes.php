@@ -23,6 +23,7 @@ Route::any('projects/add'  , array('before' => 'auth', 'uses' => 'ProjectsContro
 Route::any('projects/edit' , array('before' => 'auth', 'uses' => 'ProjectsController@editProject'));
 Route::get('projects/publish',array('before' => 'auth', 'uses' => 'ProjectsController@publish'));
 Route::get('projects/srclog',array('before' => 'auth', 'uses' => 'ProjectsController@getSrclog'));
+Route::post('projects/dopublish',array('before' => 'auth', 'uses' => 'ProjectsController@dopublish'));
 Route::any('servers/add',array('before' => 'auth', 'uses' => 'ServersController@addServers'));
 Route::any('servers/edit',array('before' => 'auth', 'uses' => 'ServersController@editServers'));
 
