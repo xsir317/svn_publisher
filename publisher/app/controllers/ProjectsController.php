@@ -96,11 +96,26 @@ class ProjectsController extends BaseController {
     {
         //TODO 根据用户权限判断
         $id = intval(Input::get('id'));
-        $version = trim(Input::get('version'));
-        
-        //project version
-        //servers
-
+        $project = Project::find($id);
+        if(!$id || !$project)
+        {
+            return Response::json(array("result"=>false,'msg' => '项目不存在'));
+        }
+        $version = trim(Input::get('project_select_version'));
+        if(!preg_match('/^\w+$/i', $version))
+        {
+            return Response::json(array("result"=>false,'msg' => '请选择正确的版本'));
+        }
+        $task_ids = array('upd_prj' => '' ,'sync_svr' => array());
+        $task_ids['upd_prj'] = Task::create('update',Auth::id(),array('project_id'=>$id,"version"=>$version));
+        $servers_id = Input::get('publish_box');
+        $servers = Server::whereIn("id",$servers_id)->get();
+        foreach ($servers as $key => $value) {
+            if($value->project_id != $id) //检查服务器是不是属于project
+                continue;
+            $task_ids['sync_svr'][$value->id] = Task::create('rsync',Auth::id(),array('server_id'=>$value->id),$task_ids['upd_prj']);
+        }
+        return Response::json(array("result"=>true,'msg' => '','tasks' => $task_ids));
     }
 
     public function getSrclog()
