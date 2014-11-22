@@ -120,8 +120,7 @@ class ProjectsController extends BaseController {
 
     public function queryStatus()
     {
-        $ids = Input::get('sync_svr',array());
-        array_push($ids, intval(Input::get('upd_prj')));
+        $ids = Input::get('ids',array());
         $tasks = Tasks::whereIn("id",$ids)->get();
         $return = array();
         foreach ($tasks as $row) {

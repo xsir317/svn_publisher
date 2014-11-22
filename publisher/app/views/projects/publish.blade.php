@@ -177,14 +177,29 @@ $("#dosync").click(function(){
                 alert(_data.msg);
                 return false;
             }
-            setTimeout(function(){update_task_status(_data.tasks);},3000);
+            var _task_ids = new Array;
+            //绑定显示元素和任务之间的关系
+            if(typeof(_data.tasks.upd_prj) != 'undefined')
+            {
+                $("#show_update_status").addClass("task_id_"+_data.tasks.upd_prj);
+                _task_ids.push(parseInt(_data.tasks.upd_prj));
+            }
+            if(typeof(_data.tasks.sync_svr) != 'undefined')
+            {
+                for(var _key in _data.tasks.sync_svr)
+                {
+                    $(".server_"+_key).find("td:eq(4)").addClass("task_id_"+_data.tasks.sync_svr[_key]);
+                    _task_ids.push(parseInt(_data.tasks.sync_svr[_key]));
+                }
+            }
+            setTimeout(function(){update_task_status(_task_ids);},3000);
         },'json');
     }
 });
 
 var update_task_status = function(_tasks){
     var __tasks = _tasks;
-    $.post("/projects/querystatus",_tasks,function(_return){
+    $.post("/projects/querystatus",{ids:_tasks},function(_return){
         var _done_tasks = new Array;
         for(var _key in _return)
         {
@@ -198,55 +213,24 @@ var update_task_status = function(_tasks){
                     break;
                 case 'success':
                     _class = 'uk-icon-check-circle-o';
-                    _done_tasks.push(parseInt(_key));
                     break;
                 case 'failed':
                     _class = 'uk-icon-times-circle-o';
-                    _done_tasks.push(parseInt(_key));
                     break;
             }
-            if(typeof(__tasks.upd_prj) != 'undefined' && __tasks.upd_prj == _key)
+            $(".task_id_"+_key).empty().append($("<i>").attr('class', _class));
+            if(_return[_key] == 'success' || _return[_key] == 'failed')
             {
-                $("#show_update_status").empty().append($("<i>").attr('class', _class));
-            }
-            else
-            {
-                if(__tasks.sync_svr != 'undefined')
+                //从__tasks里面删除
+                _index = $.inArray(parseInt(_key), __tasks);
+                if(_index != -1)
                 {
-                    for(var __key in __tasks.sync_svr)
-                    {
-                        if(__tasks.sync_svr[__key] == _key)
-                        {
-                            $(".server_"+__key).find("td:eq(4)").empty().append($("<i>").attr('class', _class));
-                            break;
-                        }
-                    }
+                    __tasks.splice(_index,1);
                 }
-            }
-        }
-        console.log(_done_tasks);
-        console.log(__tasks);
-        if(typeof(__tasks.upd_prj) != 'undefined' && -1 != $.inArray(__tasks.upd_prj, _done_tasks))
-        {
-            delete __tasks.upd_prj;
-        }
-        if(typeof(__tasks.sync_svr) != 'undefined')
-        {
-            for(var __key in __tasks.sync_svr)
-            {
-                if( -1 != $.inArray(__tasks.sync_svr[__key], _done_tasks))
-                {
-                    delete __tasks.sync_svr[__key];
-                }
-            }
-            if($.isEmptyObject(__tasks.sync_svr))
-            {
-                delete __tasks.sync_svr;
             }
         }
         if(!$.isEmptyObject(__tasks))
         {
-            console.log(__tasks);
             setTimeout(function(){update_task_status(__tasks);},3000);
         }
     },'json');
