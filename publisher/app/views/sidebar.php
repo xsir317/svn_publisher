@@ -3,7 +3,7 @@
 $sidebar = array(
     array('首页','/','index','uk-icon-home'),
     array('项目','/projects/index','projects','uk-icon-gear'),
-    array('服务器','/servers/index','servers','uk-icon-laptop'),
+    //array('服务器','/servers/index','servers','uk-icon-laptop'),
     array('用户管理','/admin/users','users','uk-icon-male'),
     array('权限分配','/admin/index','roles','uk-icon-users'),
     array('登出','/logout','logout','uk-icon-sign-out'),

@@ -26,8 +26,8 @@ Route::get('projects/srclog',array('before' => 'auth', 'uses' => 'ProjectsContro
 Route::post('projects/dopublish',array('before' => 'auth', 'uses' => 'ProjectsController@dopublish'));
 Route::post('projects/querystatus',array('before' => 'auth', 'uses' => 'ProjectsController@queryStatus'));
 
-Route::any('servers/add',array('before' => 'auth', 'uses' => 'ServersController@addServers'));
-Route::any('servers/edit',array('before' => 'auth', 'uses' => 'ServersController@editServers'));
+Route::any('servers/add',array('before' => 'auth', 'uses' => 'ServersController@editServer'));
+Route::any('servers/edit',array('before' => 'auth', 'uses' => 'ServersController@editServer'));
 
 //登入登出
 Route::any('login','HomeController@login');

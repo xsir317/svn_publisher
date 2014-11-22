@@ -209,13 +209,13 @@ var update_task_status = function(_tasks){
                 case 'created':
                     continue;
                 case 'execute':
-                    _class = 'uk-icon-spinner uk-icon-spin';
+                    _class = 'uk-icon-spinner uk-icon-spin uk-icon-small';
                     break;
                 case 'success':
-                    _class = 'uk-icon-check-circle-o';
+                    _class = 'uk-icon-check-circle-o uk-icon-small';
                     break;
                 case 'failed':
-                    _class = 'uk-icon-times-circle-o';
+                    _class = 'uk-icon-times-circle-o uk-icon-small';
                     break;
             }
             $(".task_id_"+_key).empty().append($("<i>").attr('class', _class));
@@ -229,13 +229,15 @@ var update_task_status = function(_tasks){
                 }
             }
         }
-        if(!$.isEmptyObject(__tasks))
+        if($.isEmptyObject(__tasks))
+        {
+            alert("发布成功");
+        }
+        else
         {
             setTimeout(function(){update_task_status(__tasks);},3000);
         }
     },'json');
 }
-
-//查询任务完成情况
 </script>
 @stop
