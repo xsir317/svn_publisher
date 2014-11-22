@@ -118,6 +118,18 @@ class ProjectsController extends BaseController {
         return Response::json(array("result"=>true,'msg' => '','tasks' => $task_ids));
     }
 
+    public function queryStatus()
+    {
+        $ids = Input::get('sync_svr',array());
+        array_push($ids, intval(Input::get('upd_prj')));
+        $tasks = Tasks::whereIn("id",$ids)->get();
+        $return = array();
+        foreach ($tasks as $row) {
+            $return[$row->id] = $row->status;
+        }
+        return Response::json($return);
+    }
+
     public function getSrclog()
     {
         //TODO 根据用户权限判断

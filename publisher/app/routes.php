@@ -24,6 +24,8 @@ Route::any('projects/edit' , array('before' => 'auth', 'uses' => 'ProjectsContro
 Route::get('projects/publish',array('before' => 'auth', 'uses' => 'ProjectsController@publish'));
 Route::get('projects/srclog',array('before' => 'auth', 'uses' => 'ProjectsController@getSrclog'));
 Route::post('projects/dopublish',array('before' => 'auth', 'uses' => 'ProjectsController@dopublish'));
+Route::post('projects/querystatus',array('before' => 'auth', 'uses' => 'ProjectsController@queryStatus'));
+
 Route::any('servers/add',array('before' => 'auth', 'uses' => 'ServersController@addServers'));
 Route::any('servers/edit',array('before' => 'auth', 'uses' => 'ServersController@editServers'));
 

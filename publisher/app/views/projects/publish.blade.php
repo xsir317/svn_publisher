@@ -17,8 +17,10 @@
             <tr><th>当前版本</th><td>{{{ $project->current_version }}}</td></tr>
             <tr><th>备注</th><td>{{{ $project->comments }}}</td></tr>
             <tr><th>操作</th>
-                <td>
-                    <button class="uk-button" id="version_select">版本选择</button>&nbsp;已经选择版本：<span id="show_selected_version"></span>
+                <td style="line-height: 30px;">
+                    <button class="uk-button" id="version_select">版本选择</button>
+                    &nbsp;已经选择版本：<span id="show_selected_version">--</span>
+                    &nbsp;更新情况：<span id="show_update_status">--</span>
                 </td>
             </tr>
         </tbody>
@@ -93,7 +95,7 @@ $("#version_select").click(function(){
     thisbtn.attr("disabled","disabled").html("载入中...");
     //清理所有已经载入的页
     lastlog = '';
-    version_log_box.html('');
+    version_log_box.empty();
     load_log_data(function(){thisbtn.removeAttr("disabled").html("版本选择");});
 });
 
@@ -170,13 +172,85 @@ $("#dosync").click(function(){
     {
         //提交
         $.post($("#publish_form").attr("action"),$("#publish_form").serialize(),function(_data){
-            //状态，提示信息
-            //设定项目update的任务号
-            //设定每个服务器更新的任务号
-            //启动轮询
+            if(!_data.result)
+            {
+                alert(_data.msg);
+                return false;
+            }
+            setTimeout(function(){update_task_status(_data.tasks);},3000);
         },'json');
     }
 });
+
+var update_task_status = function(_tasks){
+    var __tasks = _tasks;
+    $.post("/projects/querystatus",_tasks,function(_return){
+        var _done_tasks = new Array;
+        for(var _key in _return)
+        {
+            var _class = '';
+            switch(_return[_key])
+            {
+                case 'created':
+                    continue;
+                case 'execute':
+                    _class = 'uk-icon-spinner uk-icon-spin';
+                    break;
+                case 'success':
+                    _class = 'uk-icon-check-circle-o';
+                    _done_tasks.push(parseInt(_key));
+                    break;
+                case 'failed':
+                    _class = 'uk-icon-times-circle-o';
+                    _done_tasks.push(parseInt(_key));
+                    break;
+            }
+            if(typeof(__tasks.upd_prj) != 'undefined' && __tasks.upd_prj == _key)
+            {
+                $("#show_update_status").empty().append($("<i>").attr('class', _class));
+            }
+            else
+            {
+                if(__tasks.sync_svr != 'undefined')
+                {
+                    for(var __key in __tasks.sync_svr)
+                    {
+                        if(__tasks.sync_svr[__key] == _key)
+                        {
+                            $(".server_"+__key).find("td:eq(4)").empty().append($("<i>").attr('class', _class));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        console.log(_done_tasks);
+        console.log(__tasks);
+        if(typeof(__tasks.upd_prj) != 'undefined' && -1 != $.inArray(__tasks.upd_prj, _done_tasks))
+        {
+            delete __tasks.upd_prj;
+        }
+        if(typeof(__tasks.sync_svr) != 'undefined')
+        {
+            for(var __key in __tasks.sync_svr)
+            {
+                if( -1 != $.inArray(__tasks.sync_svr[__key], _done_tasks))
+                {
+                    delete __tasks.sync_svr[__key];
+                }
+            }
+            if($.isEmptyObject(__tasks.sync_svr))
+            {
+                delete __tasks.sync_svr;
+            }
+        }
+        if(!$.isEmptyObject(__tasks))
+        {
+            console.log(__tasks);
+            setTimeout(function(){update_task_status(__tasks);},3000);
+        }
+    },'json');
+}
 
 //查询任务完成情况
 </script>
