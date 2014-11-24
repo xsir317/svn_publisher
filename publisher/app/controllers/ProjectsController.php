@@ -7,18 +7,17 @@ class ProjectsController extends BaseController {
 	*/
 	public function allProjects()
 	{
-        //TODO 根据用户权限筛选
-		$all_projects = Project::all();
+		$all_projects = Project::whereIn('id',Auth::user()->pj_ids())->get();
 		return View::make('projects/index',array('projects' => $all_projects));
 	}
 
     public function editProject()
     {
-        //TODO 根据用户权限判断
         $id = Input::get('id');
         $project = null;
         if($id)
         {
+            $this->check_own($id);
             $project = Project::find($id);
         }
         $src_addr = trim(Input::get('src_addr'));
@@ -82,8 +81,8 @@ class ProjectsController extends BaseController {
 
     public function publish()
     {
-        //TODO 根据用户权限判断
         $id = intval(Input::get('id'));
+        $this->check_own($id);
         $project = Project::with('servers')->find($id);
         if(!$id || !$project)
         {
@@ -94,8 +93,8 @@ class ProjectsController extends BaseController {
 
     public function dopublish()
     {
-        //TODO 根据用户权限判断
         $id = intval(Input::get('id'));
+        $this->check_own($id);
         $project = Project::find($id);
         if(!$id || !$project)
         {
@@ -131,8 +130,8 @@ class ProjectsController extends BaseController {
 
     public function getSrclog()
     {
-        //TODO 根据用户权限判断
         $id = intval(Input::get('id'));
+        $this->check_own($id);
         $project = Project::with('servers')->find($id);
         if(!$id || !$project)
         {

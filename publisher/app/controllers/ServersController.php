@@ -15,6 +15,11 @@ class ServersController extends BaseController {
             $server = Server::find($id);
         }
         $project_id = intval(Input::get("project_id"));
+        //权限
+        if(!Auth::user()->pj_is_mine($project_id))
+        {
+            $project_id = 0;
+        }
         $error = '';
         if (Request::isMethod('post'))
         {
@@ -44,7 +49,7 @@ class ServersController extends BaseController {
             }
         }
         //当前用户拥有的所有项目
-        $projects = Project::all();
+        $projects = Project::whereIn('id',Auth::user()->pj_ids())->get();
         $prj_list = array();
         foreach ($projects as $value) {
             $prj_list[$value->id] = $value->title;

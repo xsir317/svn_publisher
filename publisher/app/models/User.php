@@ -24,4 +24,26 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 
+	public function pj_ids()
+	{
+		if(!Session::has("pj_ids"))
+		{
+			$ids = array();
+			if($this->is_superadmin)
+			{
+				$ids = Project::lists("id");
+			}
+			else
+			{
+				$ids = UserProjectRelation::where('uid',$this->id)->lists("prj_id");
+			}
+			Session::put("pj_ids",$ids);
+		}
+		return Session::get("pj_ids");
+	}
+
+	public function pj_is_mine($id)
+	{
+		return in_array($id, $this->pj_ids());
+	}
 }

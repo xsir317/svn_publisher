@@ -33,6 +33,7 @@ Route::any('servers/edit',array('before' => 'auth', 'uses' => 'ServersController
 Route::any('login','HomeController@login');
 Route::get('logout',function(){
 	Auth::logout();
+    Session::flush();
 	return Redirect::guest('login');
 });
 

@@ -15,4 +15,16 @@ class BaseController extends Controller {
 		}
 	}
 
+	protected function check_own($prj_id)
+	{
+		if(!Auth::user()->pj_is_mine($prj_id))
+		{
+			//if(Request::ajax())
+			//{
+			//	return Response::json(array("result"=>false,'msg' => '403 Unauthorized action'));
+			//}
+			//TODO 美化一下403返回页
+			App::abort(403, 'Unauthorized action.');
+		}
+	}
 }
