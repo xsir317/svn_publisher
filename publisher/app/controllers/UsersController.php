@@ -20,6 +20,6 @@ class UsersController extends BaseController {
 	//改密码
 	public function changepwd()
 	{
-
+		
 	}
 }
