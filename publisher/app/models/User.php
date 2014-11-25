@@ -26,20 +26,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	public function pj_ids()
 	{
-		if(!Session::has("pj_ids"))
+		if($this->is_superadmin)
 		{
-			$ids = array();
-			if($this->is_superadmin)
-			{
-				$ids = Project::lists("id");
-			}
-			else
-			{
-				$ids = UserProjectRelation::where('uid',$this->id)->lists("prj_id");
-			}
-			Session::put("pj_ids",$ids);
+			return Project::lists("id");
 		}
-		return Session::get("pj_ids");
+		else
+		{
+			return UserProjectRelation::where('uid',$this->id)->lists("prj_id");
+		}
 	}
 
 	public function pj_is_mine($id)

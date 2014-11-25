@@ -14,6 +14,10 @@ class ServersController extends BaseController {
         {
             $server = Server::find($id);
         }
+        if($server && !Auth::user()->pj_is_mine($server->project_id))
+        {
+            App::abort(403,'Not your project');
+        }
         $project_id = intval(Input::get("project_id"));
         //权限
         if(!Auth::user()->pj_is_mine($project_id))
