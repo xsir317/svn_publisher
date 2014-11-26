@@ -101,7 +101,7 @@ class UsersController extends BaseController {
             {
                 $error = '信息填写不完整';
             }
-            else if(Hash::make($oldpwd) != Auth::user()->password)
+            else if(!Auth::validate(array('username' => Auth::user()->username,'password'=> $oldpwd)))
             {
                 $error = '旧密码不正确';
             }
