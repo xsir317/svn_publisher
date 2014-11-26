@@ -29,7 +29,7 @@ class UsersController extends BaseController {
         {
             $username = trim(Input::get('username'));
             $password = trim(Input::get('password'));
-            $is_superadmin = trim(Input::get('is_superadmin'));
+            $is_superadmin = intval(Input::get('is_superadmin'));
             $project_ids = Input::get('project');
             if($user)
             {
@@ -57,18 +57,17 @@ class UsersController extends BaseController {
                     $user->username = $username;
                     $user->password = Hash::make($password);
                 }
+                $user->is_superadmin = $is_superadmin;
                 $user->save();
-                //处理传过来的项目id数组
-                return Redirect::route('users/index');
+                //如果不是超级管理员，处理传过来的项目id数组
+                if(!$user->is_superadmin)
+                {
+
+                }
+                return Redirect::to('/users/index');
             }
         }
-        //当前用户拥有的所有项目
-        $projects = Project::whereIn('id',Auth::user()->pj_ids())->get();
-        $prj_list = array();
-        foreach ($projects as $value) {
-            $prj_list[$value->id] = $value->title;
-        }
-        return View::make('users/edit',array('user'=>$user,'error' => $error));
+        return View::make('users/edit',array('user'=>$user,'error' => $error,'projects'=>Project::all()));
     }
 
 	//改密码
