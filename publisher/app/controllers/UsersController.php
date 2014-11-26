@@ -30,7 +30,7 @@ class UsersController extends BaseController {
             $username = trim(Input::get('username'));
             $password = trim(Input::get('password'));
             $is_superadmin = intval(Input::get('is_superadmin'));
-            $project_ids = Input::get('project');
+            $project_ids = Input::get('project',array());
             if($user)
             {
                 if($password)
@@ -44,7 +44,7 @@ class UsersController extends BaseController {
             	{
             		$error = '信息不完整！';
             	}
-            	if(User::where("username",$username)->get())
+            	if(User::where("username",$username)->count())
             	{
             		$error = '用户名不能和已有用户重复';
             	}
@@ -62,7 +62,24 @@ class UsersController extends BaseController {
                 //如果不是超级管理员，处理传过来的项目id数组
                 if(!$user->is_superadmin)
                 {
-
+                    $owned_pj = $user->pj_ids();
+                    foreach ($project_ids as $value) {
+                        if(!in_array($value, $owned_pj))
+                        {
+                            $_tmp = new UserProjectRelation;
+                            $_tmp->uid = $user->id;
+                            $_tmp->prj_id = $value;
+                            $_tmp->save();
+                        }
+                        else
+                        {
+                            unset($owned_pj[array_search($value, $owned_pj)]);
+                        }
+                    }
+                    if(!empty($owned_pj))
+                    {
+                        UserProjectRelation::where('uid',$user->id)->whereIn('prj_id',$owned_pj)->delete();
+                    }
                 }
                 return Redirect::to('/users/index');
             }
@@ -73,6 +90,32 @@ class UsersController extends BaseController {
 	//改密码
 	public function changepwd()
 	{
-
+        $error = '';
+        if (Request::isMethod('post'))
+        {
+            $oldpwd = trim(Input::get('oldpwd'));
+            $newpwd = trim(Input::get('newpwd'));
+            $repwd = trim(Input::get('repwd'));
+            $project_ids = Input::get('project',array());
+            if(!$oldpwd || !$newpwd)
+            {
+                $error = '信息填写不完整';
+            }
+            else if(Hash::make($oldpwd) != Auth::user()->password)
+            {
+                $error = '旧密码不正确';
+            }
+            else if($newpwd != $repwd)
+            {
+                $error = '2次输入的新密码不一致！';
+            }
+            if(!$error)
+            {
+                Auth::user()->password = Hash::make($newpwd);
+                Auth::user()->save();
+                return Redirect::action('ProjectsController@allProjects');
+            }
+        }
+        return View::make('users/pwd',array('error' => $error));
 	}
 }

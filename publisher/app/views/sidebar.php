@@ -13,7 +13,7 @@ $sidebar = array(
 <nav class="uk-panel uk-panel-box">
     <ul class="uk-nav uk-nav-side">
     <?php foreach($sidebar as $row):?>
-        <?php if($row[4] && !Auth::user()->is_superadmin) continue;?>
+        <?php if($row[4] && (!Auth::user() || !Auth::user()->is_superadmin)) continue;?>
         <li<?php if($row[2] == $currpage):?> class="uk-active"<?php endif; ?>><a href="<?php echo $row[1];?>"><i class="<?php echo $row[3]?>"></i>&nbsp;&nbsp;<?php echo $row[0];?></a></li>
     <?php endforeach;?>
     <ul>
