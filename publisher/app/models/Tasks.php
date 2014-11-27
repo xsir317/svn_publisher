@@ -25,4 +25,8 @@ class Tasks extends Eloquent {
         'failed' => '失败'
     );
     
+    public function pre()
+    {
+        return $this->belongsTo('Tasks','pre_task');
+    }
 }
