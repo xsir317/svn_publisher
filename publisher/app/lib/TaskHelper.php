@@ -88,24 +88,31 @@ class TaskHelper
     */
     private function _runCheckout($task)
     {
-        $currdir = getcwd();
-        //如果目录非空，失败
         if($task->project_id)
         {
-            $dir = Project::getTempDir($task->project_id);
-            if(!file_exists($dir))
+            $pj_dir = Project::getTempDir($task->project_id);//项目代码存放目录
+            if(!file_exists($pj_dir))
             {
-                if(!mkdir($dir,0750))
+                if(!mkdir($pj_dir,0750))
                 {
-                    return array('result'=>false,'output'=>"mkdir $dir failed!");
+                    return array('result'=>false,'output'=>"mkdir $pj_dir failed!");
                 }
             }
             $project = Project::find($project_id);
             switch ($project->vcs_type) {
                 case 'svn':
-                    $command = "svn checkout {$project->svn_addr} ./ ";
-                    $command .= " --no-auth-cache --username={$project->username} --password={$project->password}";
-                    $output = shell_exec($command);
+                    if(function_exists('svn_checkout'))
+                    {
+                        $result = svn_checkout($project->svn_addr,$pj_dir);
+                        return array('result'=>$result,'output'=> implode("\n", $output));
+                    }
+                    else
+                    {
+                        $command = "svn checkout {$project->svn_addr} {$pj_dir} ";
+                        $command .= " --no-auth-cache --username={$project->username} --password={$project->password}";
+                        exec($command,$output,$return_var);
+                        return array('result'=>($return_var == 0),'output'=> implode("\n", $output));
+                    }
                     break;
                 case 'git':
                     break;
@@ -114,8 +121,6 @@ class TaskHelper
                     break;
             }
         }
-        //checkout到指定目录
-        chdir($currdir);
         //返回
     }
 
@@ -198,7 +203,7 @@ class TaskHelper
                     {
                         $cmd .= " --limit {$limit}";
                     }
-                    $cmdresult = shell_exec($cmd);
+                    $cmdresult = exec($cmd);
                     /*//$cmdresult = '<?xml version="1.0" encoding="UTF-8"?><log><logentry revision="530"><author>测试用户</author><msg>测试文字</msg></logentry><logentry revision="529"><author>测试用户</author><msg>测试文字</msg></logentry></log>';*/
                     $loadxml = simplexml_load_string(trim($cmdresult), 'SimpleXMLElement', LIBXML_NOCDATA);
                     foreach($loadxml->children() as $elem)
@@ -214,5 +219,10 @@ class TaskHelper
             default:
                 return null;
         }
+    }
+
+    private function get_current_version($src_path,$type='svn')
+    {
+        
     }
 }

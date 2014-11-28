@@ -116,8 +116,13 @@ load_log_data = function(__callback){
             var _ul = version_log_box.find("ul");
             //由于js的for in 问题，临时采用数组处理这个排序问题
             var _order = [];
-            for (var _key in _data.logs ) _order[_order.length] = _key;
-            _order.reverse();
+            var  is_numeric = true;
+            for (var _key in _data.logs )
+            {
+                _order[_order.length] = _key;
+                if(isNan(_key)) is_numeric = false;
+            }
+            if(is_numeric) _order.reverse();
             for (var _key in _order ) {
                 $("<label/>").append(
                     $("<input/>").attr({
