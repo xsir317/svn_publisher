@@ -52,58 +52,12 @@ class TaskCommand extends Command {
 			$tasks = Tasks::where('status' , 'created')->lists('id');
 			foreach ($tasks as $_id)
 			{
-				$this->_run($_id);
+				//TaskHelper
+				Task::run($_id);
 			}
 			sleep(1);
 		}
 	}
-
-	private function _run($id)
-	{
-		$task = Tasks::find($id);
-		//如果task不存在或者状态不对
-		if(!$task || $task->status != 'created')
-		{
-			return;
-		}
-		//如果task有前置任务，而且前置任务没完成
-		if($task->pre_task && $task->pre()->status != 'success')
-		{
-			return;
-		}
-		$task->status = 'execute';
-		$task->save();
-		$_func = sprintf('_run_%s',$task->type);
-		$result = $this->$_func($task);
-		$task->execute_time = date('Y-m-d H:i:s');
-		$task->status = $result['result'] ? 'success':'failed';
-		$task->output = $result['output'];
-		$task->save();
-	}
-
-	private function _run_checkout($task)
-	{
-		//如果目录非空，失败
-		//checkout到指定目录
-		//返回
-	}
-
-	private function _run_update($task)
-	{
-		//根据命令，运行update指令
-		//返回
-	}
-
-	private function _run_delete($task)
-	{
-		//清空指定目录
-	}
-
-	private function _run_rsync($task)
-	{
-		//运行rsync
-	}
-
 
 	/**
 	 * Get the console command arguments.

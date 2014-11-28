@@ -29,4 +29,29 @@ class Tasks extends Eloquent {
     {
         return $this->belongsTo('Tasks','pre_task');
     }
+
+    public function getProjectIdAttribute()
+    {
+        $_meta = json_decode($this->command,true);
+        if(isset($_meta['project_id']))
+            return $_meta['project_id'];
+        return null;
+    }
+
+    public function getServerIdAttribute()
+    {
+        $_meta = json_decode($this->command,true);
+        if(isset($_meta['server_id']))
+            return $_meta['server_id'];
+        return null;
+    }
+
+    public function getVersionAttribute()
+    {
+        $_meta = json_decode($this->command,true);
+        if(isset($_meta['version']))
+            return $_meta['version'];
+        return null;
+    }
+
 }

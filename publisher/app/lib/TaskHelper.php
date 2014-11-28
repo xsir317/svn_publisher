@@ -59,8 +59,9 @@ class TaskHelper
 	 * 任务种类 'checkout', 'update', 'delete', 'rsync'
 	 * 
 	*/
-    public function run($task)
+    public function run($task_id)
     {
+        $task = \Tasks::find($task_id);
     	if($task->status != 'created')
         {
             return $this->err('供执行的任务必须是初始状态');
@@ -87,10 +88,35 @@ class TaskHelper
     */
     private function _runCheckout($task)
     {
-        //get the project record
-        //get the project source path
-        //run the checkout command
-        //write the output to db, and status
+        $currdir = getcwd();
+        //如果目录非空，失败
+        if($task->project_id)
+        {
+            $dir = Project::getTempDir($task->project_id);
+            if(!file_exists($dir))
+            {
+                if(!mkdir($dir,0750))
+                {
+                    return array('result'=>false,'output'=>"mkdir $dir failed!");
+                }
+            }
+            $project = Project::find($project_id);
+            switch ($project->vcs_type) {
+                case 'svn':
+                    $command = "svn checkout {$project->svn_addr} ./ ";
+                    $command .= " --no-auth-cache --username={$project->username} --password={$project->password}";
+                    $output = shell_exec($command);
+                    break;
+                case 'git':
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }
+        //checkout到指定目录
+        chdir($currdir);
+        //返回
     }
 
     /**
@@ -124,20 +150,6 @@ class TaskHelper
 
     /**
     *
-    * 获得指定id的project的目录路径
-    */
-    private function _get_work_path($project_id)
-    {
-        $path = app_path().'/storage/project_base_'.$project_id;
-        if(!file_exists($path))
-        {
-            mkdir($path);
-        }
-        return $path;
-    }
-
-    /**
-    *
     * 调用svn或git的log，获取版本号和更新文字日志
     * @param $src_path 地址
     * @param $type='svn' svn或者git
@@ -149,28 +161,50 @@ class TaskHelper
     {
         //如果last没指定，则取最新limit个
         //如果指定了，则取limit+1个，去掉last
+        $out = array();
         switch ($type) {
             case 'svn':
-                $cmd = "svn log {$src_path} --xml --non-interactive --stop-on-copy";
-                if(!empty($auth))
+                if(function_exists('svn_log'))
                 {
-                    $cmd .= " --username {$auth['username']} --password {$auth['password']}";
-                }
-                if($last)
-                {
-                    $cmd .= " -r {$last}:1 --limit ".($limit +1);
+                    if($auth)
+                    {
+                        svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_USERNAME, $auth['username']);
+                        svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_PASSWORD, $auth['password']);
+                    }
+                    if($last)
+                    {
+                        $_return = svn_log($src_path,$last,1,($limit+1),SVN_STOP_ON_COPY);
+                    }
+                    else
+                    {
+                        $_return = svn_log($src_path,null,null,$limit,SVN_STOP_ON_COPY);
+                    }
+                    foreach ($_return as $_log) {
+                        $out[$_log['rev']] = "{$_log['author']}:{$_log['msg']}";
+                    }
                 }
                 else
                 {
-                    $cmd .= " --limit {$limit}";
-                }
-                $cmdresult = `$cmd`;
-                /*//$cmdresult = '<?xml version="1.0" encoding="UTF-8"?><log><logentry revision="530"><author>测试用户</author><msg>测试文字</msg></logentry><logentry revision="529"><author>测试用户</author><msg>测试文字</msg></logentry></log>';*/
-                $loadxml = simplexml_load_string(trim($cmdresult), 'SimpleXMLElement', LIBXML_NOCDATA);
-                $out = array();
-                foreach($loadxml->children() as $elem)
-                {
-                    $out[(string)$elem->attributes()->revision] = $elem->author.":".$elem->msg;
+                    $cmd = "svn log {$src_path} --xml --non-interactive --stop-on-copy";
+                    if(!empty($auth))
+                    {
+                        $cmd .= " --username {$auth['username']} --password {$auth['password']}";
+                    }
+                    if($last)
+                    {
+                        $cmd .= " -r {$last}:1 --limit ".($limit +1);
+                    }
+                    else
+                    {
+                        $cmd .= " --limit {$limit}";
+                    }
+                    $cmdresult = shell_exec($cmd);
+                    /*//$cmdresult = '<?xml version="1.0" encoding="UTF-8"?><log><logentry revision="530"><author>测试用户</author><msg>测试文字</msg></logentry><logentry revision="529"><author>测试用户</author><msg>测试文字</msg></logentry></log>';*/
+                    $loadxml = simplexml_load_string(trim($cmdresult), 'SimpleXMLElement', LIBXML_NOCDATA);
+                    foreach($loadxml->children() as $elem)
+                    {
+                        $out[(string)$elem->attributes()->revision] = $elem->author.":".$elem->msg;
+                    }
                 }
                 if($last && isset($out[$last])) unset($out[$last]);
                 return $out;

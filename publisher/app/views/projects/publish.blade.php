@@ -114,13 +114,17 @@ load_log_data = function(__callback){
                 $('<ul class="uk-list"></ul>').appendTo(version_log_box);
             }
             var _ul = version_log_box.find("ul");
-            for (var _key in _data.logs ) {
+            //由于js的for in 问题，临时采用数组处理这个排序问题
+            var _order = [];
+            for (var _key in _data.logs ) _order[_order.length] = _key;
+            _order.reverse();
+            for (var _key in _order ) {
                 $("<label/>").append(
                     $("<input/>").attr({
                         type: 'radio',
-                        value: _key,
+                        value: _order[_key],
                         name: "version_select"
-                    })).append("version:"+_key + " " + _data.logs[_key])
+                    })).append("version:"+_order[_key] + " " + _data.logs[_order[_key]])
                     .appendTo($("<li/>")
                         .appendTo(_ul));
             }

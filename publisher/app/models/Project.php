@@ -19,6 +19,12 @@ class Project extends Eloquent {
     	return $this->hasMany('Server','project_id','id');
     }
 
+    //project临时目录
+    public function getTempDir($_id)
+    {
+        return app_path().'/storage/pjfolder_'.intval($_id);
+    }
+
     public function getUsernameAttribute()
     {
         if(!$this->auth_info) return '';
