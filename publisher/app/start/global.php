@@ -50,6 +50,16 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 App::error(function(Exception $exception, $code)
 {
 	Log::error($exception);
+    switch ($code)
+    {
+        case 401:
+        case 403:
+            return Response::view('errors.default', array('msg' => '您没有访问权限'), $code);
+        case 404:
+            return Response::view('errors.default', array('msg' => '您要访问的页面不存在'), $code);
+        case 500:
+            return Response::view('errors.default', array('msg' => '服务器内部错误，请联系管理员'), $code);
+    }
 });
 
 /*
