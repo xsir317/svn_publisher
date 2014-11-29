@@ -67,13 +67,9 @@ class TaskHelper
             return $this->err('供执行的任务必须是初始状态');
         }
     	//TODO 检查前置任务pre_task 的状态
-        if($task->pre_id)
+        if($task->pre_task && $task->pre()->status != 'success')
         {
-            $pre_task = \Tasks::find($task->pre_id);
-            if(!$pre_task || $pre_task->status != 'success')
-            {
-                return $this->err('前置任务尚未完成，跳过此任务');
-            }
+            return $this->err('前置任务尚未完成');
         }
         $task->status = 'execute';
         $task->execute_time = date('Y-m-d H:i:s');
@@ -103,21 +99,33 @@ class TaskHelper
                 case 'svn':
                     if(function_exists('svn_checkout'))
                     {
+                        if($project->username)
+                        {
+                            svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_USERNAME, $project->username);
+                            svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_PASSWORD, $project->password);
+                        }
                         $result = svn_checkout($project->svn_addr,$pj_dir);
-                        return array('result'=>$result,'output'=> implode("\n", $output));
+                        if($result)
+                        {
+                            $project->current_version = $this->get_dir_version($pj_dir);
+                            $project->save();
+                        }
+                        return array('result'=>$result,'output'=> '');
                     }
                     else
                     {
                         $command = "svn checkout {$project->svn_addr} {$pj_dir} ";
                         $command .= " --no-auth-cache --username={$project->username} --password={$project->password}";
                         exec($command,$output,$return_var);
+                        if($return_var == 0)
+                        {
+                            $project->current_version = $this->get_dir_version($pj_dir);
+                            $project->save();
+                        }
                         return array('result'=>($return_var == 0),'output'=> implode("\n", $output));
                     }
                     break;
                 case 'git':
-                    break;
-                default:
-                    # code...
                     break;
             }
         }
@@ -140,7 +148,30 @@ class TaskHelper
     */
     private function _runDelete($task)
     {
-
+        if($task->project_id)
+        {
+            $pj_dir = Project::getTempDir($task->project_id);
+            if(!file_exists($pj_dir))
+            {
+                if(!mkdir($pj_dir,0750))
+                {
+                    return array('result'=>false,'output'=>"mkdir $pj_dir failed!");
+                }
+            }
+            else
+            {
+                $delete_cmd = "rm -rf {$pj_dir}/*";
+                exec($delete_cmd,$output,$return_var);
+                if($return_var == 0)
+                {
+                    $project = Project::find($project_id);
+                    $project->current_version = '';
+                    $project->save();
+                }
+                
+                return array('result'=>($return_var == 0),'output'=> implode("\n", $output));
+            }
+        }
     }
 
     /**
@@ -204,7 +235,6 @@ class TaskHelper
                         $cmd .= " --limit {$limit}";
                     }
                     $cmdresult = exec($cmd);
-                    /*//$cmdresult = '<?xml version="1.0" encoding="UTF-8"?><log><logentry revision="530"><author>测试用户</author><msg>测试文字</msg></logentry><logentry revision="529"><author>测试用户</author><msg>测试文字</msg></logentry></log>';*/
                     $loadxml = simplexml_load_string(trim($cmdresult), 'SimpleXMLElement', LIBXML_NOCDATA);
                     foreach($loadxml->children() as $elem)
                     {
@@ -221,8 +251,20 @@ class TaskHelper
         }
     }
 
-    private function get_current_version($src_path,$type='svn')
+    private function get_dir_version($src_path,$type='svn')
     {
-        
+        switch ($type) {
+            case 'svn':
+                exec("svn info {$src_path}",$output);
+                foreach($output as $_row)
+                {
+                    if(preg_match('/^Revision:\s?(\d+)/i', $_row,$match))
+                        return $match[1];
+                }
+                return '';
+            case 'git':
+                # code...
+                break;
+        }
     }
 }

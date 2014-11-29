@@ -59,6 +59,8 @@ App::error(function(Exception $exception, $code)
             return Response::view('errors.default', array('msg' => '您要访问的页面不存在'), $code);
         case 500:
             return Response::view('errors.default', array('msg' => '服务器内部错误，请联系管理员'), $code);
+        default:
+            return Response::view('errors.default', array('msg' => '出错了：代码'.$code), $code);
     }
 });
 
