@@ -122,14 +122,13 @@ class TaskHelper
                             $project->current_version = $this->get_dir_version($pj_dir);
                             $project->save();
                         }
-                        return array('result'=>($return_var == 0),'output'=> implode("\n", $output));
+                        return array('result'=>($return_var == 0),'output'=> implode("\n", $output)." code {$return_var}");
                     }
                     break;
                 case 'git':
                     break;
             }
         }
-        //返回
     }
 
     /**
@@ -139,6 +138,44 @@ class TaskHelper
     private function _runUpdate($task)
     {
 
+        if($task->project_id)
+        {
+            $pj_dir = Project::getTempDir($task->project_id);
+            $project = Project::find($project_id);
+            switch ($project->vcs_type) {
+                case 'svn':
+                    if(function_exists('svn_update'))
+                    {
+                        if($project->username)
+                        {
+                            svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_USERNAME, $project->username);
+                            svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_PASSWORD, $project->password);
+                        }
+                        $result = svn_update($project->svn_addr,$pj_dir,$task->version);
+                        if($result !== false)
+                        {
+                            $project->current_version = $this->get_dir_version($pj_dir);
+                            $project->save();
+                        }
+                        return array('result'=>($result !== false),'output'=> '');
+                    }
+                    else
+                    {
+                        $command = "svn update {$project->svn_addr} {$pj_dir} -r {$task->version}";
+                        $command .= " --no-auth-cache --username={$project->username} --password={$project->password}";
+                        exec($command,$output,$return_var);
+                        if($return_var == 0)
+                        {
+                            $project->current_version = $this->get_dir_version($pj_dir);
+                            $project->save();
+                        }
+                        return array('result'=>($return_var == 0),'output'=> implode("\n", $output)." code {$return_var}");
+                    }
+                    break;
+                case 'git':
+                    break;
+            }
+        }
     }
 
 
@@ -169,7 +206,7 @@ class TaskHelper
                     $project->save();
                 }
                 
-                return array('result'=>($return_var == 0),'output'=> implode("\n", $output));
+                return array('result'=>($return_var == 0),'output'=> implode("\n", $output)." code {$return_var}");
             }
         }
     }
@@ -177,11 +214,22 @@ class TaskHelper
     /**
      * 
      * 针对一个服务器，调用Rsync将项目发布到线上，然后回写Server的版本和更新结果
-     * 
+     * @link http://www.cnblogs.com/mchina/p/2829944.html Rsync的配置
     */
     private function _runRsync($task)
     {
-
+        $server = Server::find($task->server_id);
+        $pj_dir = Project::getTempDir($server->project_id);
+        //目前就记录个日志就得了
+        $rsync_cmd = sprintf("rsync -avzP publisher@%s::%s %s",$server->ip,$server->rsync_name,$pj_dir);
+        //忽略文件、 发布时要添加del选项
+        file_put_contents(app_path()."/storage/rsync.log",$rsync_cmd,FILE_APPEND);
+        if(true)
+        {
+            $server->current_version = $this->get_dir_version($pj_dir);
+            $server->save();
+        }
+        return array('result'=>true,'output'=> '');
     }
 
     /**
