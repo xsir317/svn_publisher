@@ -67,7 +67,7 @@ class TaskHelper
             return $this->err('供执行的任务必须是初始状态');
         }
     	//TODO 检查前置任务pre_task 的状态
-        if($task->pre_task && $task->pre()->status != 'success')
+        if($task->pre_task && $task->pre->status != 'success')
         {
             return $this->err('前置任务尚未完成');
         }
@@ -75,7 +75,9 @@ class TaskHelper
         $task->execute_time = date('Y-m-d H:i:s');
         $task->save();
         $func = '_run'.ucfirst($task->type);
-        return $this->$func($task);
+        $result = $this->$func($task);
+        $task->status = $result['result'] ? 'success':'failed';
+        $task->save();
     }
 
     /**
@@ -86,7 +88,7 @@ class TaskHelper
     {
         if($task->project_id)
         {
-            $pj_dir = Project::getTempDir($task->project_id);//项目代码存放目录
+            $pj_dir = \Project::getTempDir($task->project_id);//项目代码存放目录
             if(!file_exists($pj_dir))
             {
                 if(!mkdir($pj_dir,0750))
@@ -94,17 +96,17 @@ class TaskHelper
                     return array('result'=>false,'output'=>"mkdir $pj_dir failed!");
                 }
             }
-            $project = Project::find($project_id);
+            $project = \Project::find($task->project_id);
             switch ($project->vcs_type) {
                 case 'svn':
-                    if(function_exists('svn_checkout'))
+                    if(false)//function_exists('svn_checkout'))
                     {
                         if($project->username)
                         {
                             svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_USERNAME, $project->username);
                             svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_PASSWORD, $project->password);
                         }
-                        $result = svn_checkout($project->svn_addr,$pj_dir);
+                        $result = svn_checkout($project->src_addr,$pj_dir);
                         if($result)
                         {
                             $project->current_version = $this->get_dir_version($pj_dir);
@@ -114,8 +116,11 @@ class TaskHelper
                     }
                     else
                     {
-                        $command = "svn checkout {$project->svn_addr} {$pj_dir} ";
-                        $command .= " --no-auth-cache --username={$project->username} --password={$project->password}";
+                        $command = "svn checkout {$project->src_addr} {$pj_dir}  --no-auth-cache";
+                        if($project->username)
+                        {
+                            $command .= " --username={$project->username} --password={$project->password}";
+                        }
                         exec($command,$output,$return_var);
                         if($return_var == 0)
                         {
@@ -140,8 +145,8 @@ class TaskHelper
 
         if($task->project_id)
         {
-            $pj_dir = Project::getTempDir($task->project_id);
-            $project = Project::find($project_id);
+            $pj_dir = \Project::getTempDir($task->project_id);
+            $project = \Project::find($task->project_id);
             switch ($project->vcs_type) {
                 case 'svn':
                     if(function_exists('svn_update'))
@@ -151,7 +156,7 @@ class TaskHelper
                             svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_USERNAME, $project->username);
                             svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_PASSWORD, $project->password);
                         }
-                        $result = svn_update($project->svn_addr,$pj_dir,$task->version);
+                        $result = svn_update($pj_dir,$task->version);
                         if($result !== false)
                         {
                             $project->current_version = $this->get_dir_version($pj_dir);
@@ -161,7 +166,7 @@ class TaskHelper
                     }
                     else
                     {
-                        $command = "svn update {$project->svn_addr} {$pj_dir} -r {$task->version}";
+                        $command = "svn update {$pj_dir} -r {$task->version}";
                         $command .= " --no-auth-cache --username={$project->username} --password={$project->password}";
                         exec($command,$output,$return_var);
                         if($return_var == 0)
@@ -187,7 +192,7 @@ class TaskHelper
     {
         if($task->project_id)
         {
-            $pj_dir = Project::getTempDir($task->project_id);
+            $pj_dir = \Project::getTempDir($task->project_id);
             if(!file_exists($pj_dir))
             {
                 if(!mkdir($pj_dir,0750))
@@ -201,7 +206,7 @@ class TaskHelper
                 exec($delete_cmd,$output,$return_var);
                 if($return_var == 0)
                 {
-                    $project = Project::find($project_id);
+                    $project = \Project::find($project_id);
                     $project->current_version = '';
                     $project->save();
                 }
@@ -218,12 +223,12 @@ class TaskHelper
     */
     private function _runRsync($task)
     {
-        $server = Server::find($task->server_id);
-        $pj_dir = Project::getTempDir($server->project_id);
+        $server = \Server::find($task->server_id);
+        $pj_dir = \Project::getTempDir($server->project_id);
         //目前就记录个日志就得了
         $rsync_cmd = sprintf("rsync -avzP publisher@%s::%s %s",$server->ip,$server->rsync_name,$pj_dir);
         //忽略文件、 发布时要添加del选项
-        file_put_contents(app_path()."/storage/rsync.log",$rsync_cmd,FILE_APPEND);
+        file_put_contents(app_path()."/storage/rsync.log",$rsync_cmd."\n",FILE_APPEND);
         if(true)
         {
             $server->current_version = $this->get_dir_version($pj_dir);

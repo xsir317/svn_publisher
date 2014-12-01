@@ -120,7 +120,7 @@ load_log_data = function(__callback){
             for (var _key in _data.logs )
             {
                 _order[_order.length] = _key;
-                if(isNan(_key)) is_numeric = false;
+                if(isNaN(_key)) is_numeric = false;
             }
             if(is_numeric) _order.reverse();
             for (var _key in _order ) {

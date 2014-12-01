@@ -20,7 +20,7 @@ class Project extends Eloquent {
     }
 
     //project临时目录
-    public function getTempDir($_id)
+    public static function getTempDir($_id)
     {
         return app_path().'/storage/pjfolder_'.intval($_id);
     }
