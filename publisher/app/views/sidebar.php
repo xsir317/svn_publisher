@@ -6,7 +6,6 @@ $sidebar = array(
     array('项目','/projects/index','projects','uk-icon-gear',false),
     array('用户管理','/users/index','users','uk-icon-male',true),
     array('修改密码','/users/password','pwd','uk-icon-asterisk',false),
-    array('权限分配','/admin/index','roles','uk-icon-users',false),
     array('登出','/logout','logout','uk-icon-sign-out',false),
 );
 ?>

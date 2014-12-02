@@ -38,10 +38,11 @@
         {{ Form::checkbox('is_superadmin','1',($user && $user->is_superadmin)) }}
         </div>
     </div>
+    <?php if(!$user || !$user->is_superadmin):?>
     <div class="uk-form-row">
         {{ Form::label('','项目',array('class' => 'uk-form-label')) }}
         <div class="uk-form-controls">
-        <ul>
+        <ul class="uk-list">
             <?php foreach($projects as $_row):?>
             <li>
                 {{ Form::checkbox('project[]',$_row->id,($user && in_array($_row->id,$user->pj_ids()))) }} {{ $_row->title }}
@@ -51,6 +52,7 @@
         </ul>
         </div>
     </div>
+    <?php endif;?>
     <?php if($error):?>
     <div class="uk-alert uk-alert-danger">{{ $error }}</div>
     <?php endif;?>
