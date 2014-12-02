@@ -171,7 +171,7 @@ class TaskHelper
                         exec($command,$output,$return_var);
                         if($return_var == 0)
                         {
-                            $project->current_version = $this->get_dir_version($pj_dir);
+                            $project->current_version = $project->current_version;
                             $project->save();
                         }
                         return array('result'=>($return_var == 0),'output'=> implode("\n", $output)." code {$return_var}");
@@ -210,7 +210,6 @@ class TaskHelper
                     $project->current_version = '';
                     $project->save();
                 }
-                
                 return array('result'=>($return_var == 0),'output'=> implode("\n", $output)." code {$return_var}");
             }
         }
@@ -227,7 +226,7 @@ class TaskHelper
         $pj_dir = \Project::getTempDir($server->project_id);
         //目前就记录个日志就得了
         $rsync_cmd = sprintf("rsync -avzP publisher@%s::%s %s",$server->ip,$server->rsync_name,$pj_dir);
-        //忽略文件、 发布时要添加del选项
+        //忽略文件、 发布时要添加del选项 --delete --exclude
         file_put_contents(app_path()."/storage/rsync.log",$rsync_cmd."\n",FILE_APPEND);
         if(true)
         {

@@ -36,6 +36,18 @@
         </div>
     </div>
 </div>
+<div id="dopub_box" class="uk-modal">
+    <div class="uk-modal-dialog">
+        <a class="uk-modal-close uk-close"></a>
+        <div class="modal_content">
+            备注：
+            <textarea></textarea>
+        </div>
+        <div class="uk-panel uk-panel-box">
+            <button class="uk-button uk-button-success" id="dopub_btn">确定</button>
+        </div>
+    </div>
+</div>
 <?php if(!empty($project->servers)):?>
 <!--服务器列表-->
 {{ Form::open(array("id"=>"publish_form","url"=>"/projects/dopublish","onsubmit"=>"return false;")) }}

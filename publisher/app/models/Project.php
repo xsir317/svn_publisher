@@ -1,8 +1,6 @@
 <?php
 
 class Project extends Eloquent {
-
-
 	/**
 	 * The database table used by the model.
 	 *
@@ -22,7 +20,7 @@ class Project extends Eloquent {
     //project临时目录
     public static function getTempDir($_id)
     {
-        return app_path().'/storage/pjfolder_'.intval($_id);
+        return app_path().DIRECTORY_SEPARATOR.'storage'.DIRECTORY_SEPARATOR.'pjfolder_'.intval($_id);
     }
 
     public function getUsernameAttribute()
