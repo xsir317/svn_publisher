@@ -226,9 +226,17 @@ class TaskHelper
         $server = \Server::find($task->server_id);
         $pj_dir = \Project::getTempDir($server->project_id);
         chdir($pj_dir);
-        //目前就记录个日志就得了
-        $rsync_cmd = sprintf("rsync -az --delete %s %s::%s",'.',$server->ip,$server->rsync_name);
-        //file_put_contents(app_path()."/storage/rsync.log",$rsync_cmd."\n",FILE_APPEND);
+        $excludes = '';
+        $exclude_files = explode("\n",$server->project->ignore_files);
+        foreach ($exclude_files as $_file) {
+            $_file = trim($_file);
+            if($_file)
+            {
+                $excludes .= ' --exclude '.escapeshellarg($_file);
+            }
+        }
+        $rsync_cmd = sprintf("rsync -az --delete %s . %s::%s",$excludes,$server->ip,$server->rsync_name);
+        file_put_contents(app_path()."/storage/rsync.log",$rsync_cmd."\n",FILE_APPEND);
         exec($rsync_cmd,$output,$return_var);
         if($return_var == 0)
         {
