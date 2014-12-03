@@ -7,29 +7,21 @@
     <body>
         <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
             <nav class="uk-navbar uk-margin-large-bottom">
-                <a class="uk-navbar-brand uk-hidden-small" href="layouts_frontpage.html">Brand</a>
                 <ul class="uk-navbar-nav uk-hidden-small">
                     <li>
                         <a href="/">首页</a>
                     </li>
                     <li>
-                        <a href="#">Portfolio</a>
+                        <a href="https://github.com/xsir317/svn_publisher" target="_blank">On Github</a>
                     </li>
                     <li>
-                        <a href="#">Blog</a>
-                    </li>
-                    <li>
-                        <a href="#">产品介绍</a>
-                    </li>
-                    <li>
-                        <a href="#">联系我们</a>
+                        <a href="mailto:hujie@ztgame.com">联系我们</a>
                     </li>
                     <li>
                         <a href="/logout">Login</a>
                     </li>
                 </ul>
                 <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
-                <div class="uk-navbar-brand uk-navbar-center uk-visible-small">Brand</div>
             </nav>
             <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-medium-1-5">

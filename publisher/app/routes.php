@@ -11,11 +11,7 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
-Route::get('home/welcome', 'HomeController@showWelcome');
+Route::get('/', array('before' => 'auth', 'uses' => 'HomeController@showWelcome'));
 
 //项目
 Route::get('projects/index', array('before' => 'auth', 'uses' => 'ProjectsController@allProjects'));
