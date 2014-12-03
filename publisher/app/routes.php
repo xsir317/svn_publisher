@@ -28,6 +28,7 @@ Route::post('projects/querystatus',array('before' => 'auth', 'uses' => 'Projects
 //服务器
 Route::any('servers/add',array('before' => 'auth', 'uses' => 'ServersController@editServer'));
 Route::any('servers/edit',array('before' => 'auth', 'uses' => 'ServersController@editServer'));
+Route::get('servers/ping',array('before' => 'auth', 'uses' => 'ServersController@pingServer'));
 
 //用户
 Route::get('users/index',array('before' => 'auth', 'uses' => 'UsersController@all'));

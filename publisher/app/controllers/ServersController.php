@@ -61,4 +61,14 @@ class ServersController extends BaseController {
         return View::make('servers/edit',array('server'=>$server,'error' => $error,'project_id' => $project_id,'projects'=>$prj_list));
     }
 
+    public function pingServer()
+    {
+        $id = intval(Input::get('id'));
+        $server = Server::find($id);
+        if($id && $server && Auth::user()->pj_is_mine($server->project_id))
+        {
+            return Response::json(Task::pingRsyncServer($server->ip));
+        }
+        return Response::json(false);
+    }
 }

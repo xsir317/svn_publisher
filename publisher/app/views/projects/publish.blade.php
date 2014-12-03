@@ -61,8 +61,9 @@
             <th>服务器</th>
             <th>IP</th>
             <th>版本</th>
-            <th>同步状态</th>
+            <th>发布进度</th>
             <th>操作</th>
+            <th>状态</th>
         </tr>
     </thead>
     <tbody>
@@ -75,6 +76,9 @@
             <td>--</td>
             <td>
                 <a href="/servers/edit?id=<?php echo $row->id;?>" class="uk-button">修改</a>
+            </td>
+            <td>
+                <i class="uk-icon-question uk-icon-small" alt="状态未知"></i>
             </td>
         </tr>
     <?php endforeach;?>
@@ -260,5 +264,22 @@ var update_task_status = function(_tasks){
         }
     },'json');
 }
+$(".server_row").each(function(){
+    var _this = $(this);
+    $.getJSON('/servers/ping',{id:_this.find("input[name='publish_box[]']").val()},function(_data){
+        if(_data)
+        {
+            _alt = '服务器正常';
+            _class = 'uk-icon-check';
+        }
+        else
+        {
+            _alt = '服务器Rsync服务故障！';
+            _class = 'uk-icon-warning';
+        }
+        _this.find("td:last i").attr("alt",_alt).removeClass('uk-icon-question').addClass(_class);
+    });
+});
+
 </script>
 @stop

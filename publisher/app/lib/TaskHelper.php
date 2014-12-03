@@ -222,18 +222,21 @@ class TaskHelper
     */
     private function _runRsync($task)
     {
+        $current_dir = getcwd();
         $server = \Server::find($task->server_id);
         $pj_dir = \Project::getTempDir($server->project_id);
+        chdir($pj_dir);
         //目前就记录个日志就得了
-        $rsync_cmd = sprintf("rsync -avzP publisher@%s::%s %s",$server->ip,$server->rsync_name,$pj_dir);
-        //忽略文件、 发布时要添加del选项 --delete --exclude
-        file_put_contents(app_path()."/storage/rsync.log",$rsync_cmd."\n",FILE_APPEND);
-        if(true)
+        $rsync_cmd = sprintf("rsync -az --delete %s %s::%s",'.',$server->ip,$server->rsync_name);
+        //file_put_contents(app_path()."/storage/rsync.log",$rsync_cmd."\n",FILE_APPEND);
+        exec($rsync_cmd,$output,$return_var);
+        if($return_var == 0)
         {
-            $server->current_version = $this->get_dir_version($pj_dir);
+            $server->current_version = $this->get_dir_version('.');
             $server->save();
         }
-        return array('result'=>true,'output'=> '');
+        chdir($current_dir);
+        return array('result'=>true,'output'=> implode("\n", $output)." code {$return_var}");
     }
 
     /**
@@ -318,5 +321,22 @@ class TaskHelper
                 # code...
                 break;
         }
+    }
+
+    // 测试服务器通迅
+    public function pingRsyncServer($ip)
+    {
+        $result = array();
+        if ($fp = @fsockopen($ip, 873, $errno, $errstr, 5))
+        {
+            fwrite($fp, "\n");
+            $ret = fread($fp, 8192);
+            fclose($fp);
+            if(preg_match('/RSYNCD:\s*\d+/',$ret))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

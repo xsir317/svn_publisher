@@ -41,7 +41,7 @@ class TaskCommand extends Command {
 	public function fire()
 	{
 		//启动之前先检查进程是否还活着,如果还活着咱就退
-		if(file_exists($this->filelock) && posix_kill(intval(file_get_contents($this->filelock)),0))
+		if(file_exists($this->filelock) && function_exists('posix_kill') && posix_kill(intval(file_get_contents($this->filelock)),0))
 		{
 			die("pid exists,exit");
 		}
