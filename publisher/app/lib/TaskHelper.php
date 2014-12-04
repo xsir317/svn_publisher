@@ -76,6 +76,7 @@ class TaskHelper
         $task->save();
         $func = '_run'.ucfirst($task->type);
         $result = $this->$func($task);
+        $task->output = $result['output'];
         $task->status = $result['result'] ? 'success':'failed';
         $task->save();
     }
@@ -235,7 +236,7 @@ class TaskHelper
                 $excludes .= ' --exclude '.escapeshellarg($_file);
             }
         }
-        $rsync_cmd = sprintf("rsync -az --delete %s . %s::%s",$excludes,$server->ip,$server->rsync_name);
+        $rsync_cmd = sprintf("rsync -azc --delete %s . %s::%s",$excludes,$server->ip,$server->rsync_name);
         file_put_contents(app_path()."/storage/rsync.log",$rsync_cmd."\n",FILE_APPEND);
         exec($rsync_cmd,$output,$return_var);
         if($return_var == 0)

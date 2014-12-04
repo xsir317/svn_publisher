@@ -10,6 +10,7 @@
     <h1 class="uk-article-title">欢迎使用代码发布系统</h1>
     <p>本系统暂时只支持SVN，以后将逐步支持GIT。您可在“项目”菜单中找到自己要发布的项目，通过页面浏览项目的SVN历史纪录，选择要发布的版本和要发布的服务器，系统将把您选择的代码版本发布到指定服务器。</p>
     <p>权限由超级管理员管理，请向超级管理员联系获取您所在项目的权限。请注意，获得权限之后，您将对您的项目负责。</p>
+    <hr class="uk-article-divider" />
     <h3>一般配置、使用说明</h3>
     <p>
         <h3>项目配置选项说明</h3>
@@ -27,6 +28,7 @@
                 <li><strong>请注意，修改源码地址会导致发布服务器上check的代码完全清除并重新checkout，可能会消耗一些时间。</strong></li>
             </ul>
         </section>
+        <hr class="uk-article-divider" />
         <h3>服务器配置选项说明</h3>
         <section>
             <ul class="uk-list">
@@ -37,6 +39,7 @@
                 <li>rsync模块名：rsync配置的模块名</li>
             </ul>
         </section>
+        <hr class="uk-article-divider" />
         <h3>rsync服务器端配置说明</h3>
         <section>
             rsync配置要确认好服务器和本发布系统的网络关系，确认填写内网还是外网IP。<br />
@@ -58,8 +61,16 @@ host deny = *
             本系统暂时只依赖指定IP安全性，不支持Rsync端指定帐号密码，所以请务必限制IP白名单。<br />
             更详细的配置请搜索rsync配置相关文章，<a href="http://www.cnblogs.com/mchina/p/2829944.html" target="_blank">例</a>。
         </section>
+        <hr class="uk-article-divider" />
         <h3>发布操作</h3>
-        <section></section>
+        <section>
+            发布页面会显示当前项目的详情，包括名称、负责人、源码相关信息以及选择版本和服务器的操作区域。<br />
+            <ul class="uk-list">
+                <li>版本选择：系统会显示代码的历史版本，请从中选择某一版本。</li>
+                <li>选择服务器：勾选您要发布的服务器，则您选择的服务器上的代码将会更新到您选择的版本。</li>
+                <li>服务器状态：<i class="uk-icon-small uk-icon-check" alt="服务器正常"></i>表示可以同步，<i class="uk-icon-small uk-icon-warning"></i>表示服务器Rsync服务故障，请联系运维人员解决。</li>
+            </ul>
+        </section>
     </p>
 </article>
 @stop

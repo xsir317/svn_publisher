@@ -36,18 +36,6 @@
         </div>
     </div>
 </div>
-<div id="dopub_box" class="uk-modal">
-    <div class="uk-modal-dialog">
-        <a class="uk-modal-close uk-close"></a>
-        <div class="modal_content">
-            备注：
-            <textarea></textarea>
-        </div>
-        <div class="uk-panel uk-panel-box">
-            <button class="uk-button uk-button-success" id="dopub_btn">确定</button>
-        </div>
-    </div>
-</div>
 <?php if(!empty($project->servers)):?>
 <!--服务器列表-->
 {{ Form::open(array("id"=>"publish_form","url"=>"/projects/dopublish","onsubmit"=>"return false;")) }}
@@ -86,7 +74,8 @@
 </table>
 <!--文件对比-->
 <div class="uk-panel">
-    <h3 class="uk-panel-title">待同步文件列表</h3>
+    <h3 class="uk-panel-title">同步备注</h3>
+    <textarea name="pub_comment" style="width:100%;" rows="4"></textarea>
 </div>
 <!--操作按钮-->
 <div class="uk-panel">
