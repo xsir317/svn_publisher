@@ -34,9 +34,22 @@ svn_publisher
 这个系统是用于打通SVN和线上环境的，目前的设想是部署在2台服务器上，当然这2台服务器也可以合并在一起，主要取决于实际的网络情况。  
 
 * __发布服务器：__ 发布服务器的作用是根据数据库中记录的任务，逐条执行，从SVN服务器获取项目代码，使用将代码推送到线上。发布服务器不必与实际使用者互通，而只要保证与SVN服务器、数据库以及线上各服务器能连通即可。  
-软件方面，发布服务器需要安装rsync客户端，PHP 5.4 以上，需要部署本系统，需要安装SVN客户端，并且设置crontab `* * * * * php APP_ROOT/artisan task:run`。
+软件方面，发布服务器需要安装rsync客户端，PHP 5.5 以上，需要部署本系统，需要安装SVN客户端，并且设置crontab `* * * * * php APP_ROOT/artisan task:run`。
 * __Web端：__ Web端展示给实际使用者SVN的历史纪录，并将使用者设置的任务写入数据库，驱动发布脚本运行。所以Web端服务器需要能访问SVN服务器、数据库，还要提供Web界面给实际使用者。  
-Web端需要PHP 5.4 以上，部署本系统，并需要安装SVN客户端。
+Web端需要PHP 5.5 以上，部署本系统，并需要安装SVN客户端。
+
+简单的安装步骤如下：
+
+1.  git clone https://github.com/xsir317/svn_publisher.git
+2.  cd svn_publisher
+3.  composer update 
+4.  如果上一步卡住了，说明你在国内。。。请参考[如何使用国内composer镜像](http://pkg.phpcomposer.com/)来安装框架。本系统基于Laravel，不安装Laravel是不能继续用的。
+5.  把web的根目录配置到svn_publisher/publisher/public 目录下
+6.  域名解析好，重启一下web服务器，让配置生效
+7.  访问刚刚配置的域名，应该就可以看到登录界面了。
+8.  查看和修改svn_publisher/publisher/app/config/local/database.php ，手动建立DB然后把svn_publisher/db/publisher.dump.sql 导入进去。
+9.  应该可以用账号/密码  admin/admin 登入进去了。
+
 * __DB：__ 数据库用于本系统管理各种日志记录、用户权限和各种项目信息的存储。发布服务器、Web端和DB可以放在同一台服务器上。
 
 除此之外，要让发布服务器正常工作，必须配置好每个项目的测试、正式服务器的rsync服务，以保证发布系统可以推送。
