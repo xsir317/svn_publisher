@@ -41,7 +41,7 @@ Web端需要PHP 5.5 以上，部署本系统，并需要安装SVN客户端。
 简单的安装步骤如下：
 
 1.  git clone https://github.com/xsir317/svn_publisher.git
-2.  cd svn_publisher
+2.  cd svn_publisher/publisher
 3.  composer update 
 4.  如果上一步卡住了，说明你在国内。。。请参考[如何使用国内composer镜像](http://pkg.phpcomposer.com/)来安装框架。本系统基于Laravel，不安装Laravel是不能继续用的。
 5.  把web的根目录配置到svn_publisher/publisher/public 目录下
