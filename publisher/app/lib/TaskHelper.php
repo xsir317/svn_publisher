@@ -207,7 +207,7 @@ class TaskHelper
                 exec($delete_cmd,$output,$return_var);
                 if($return_var == 0)
                 {
-                    $project = \Project::find($project_id);
+                    $project = \Project::find($task->project_id);
                     $project->current_version = '';
                     $project->save();
                 }
